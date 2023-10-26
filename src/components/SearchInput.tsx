@@ -1,5 +1,5 @@
 import React from 'react';
-import { ISearchInputProps } from '../types/types';
+import { ISearchInputProps } from '../models/types';
 
 export default class SearchInput extends React.Component<ISearchInputProps> {
   render(): React.ReactNode {

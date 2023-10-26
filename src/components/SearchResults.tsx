@@ -1,5 +1,5 @@
 import React from 'react';
-import { ISearchResultsProps } from '../types/types';
+import { ISearchResultsProps } from '../models/types';
 
 export default class SearchResult extends React.Component<ISearchResultsProps> {
   render() {

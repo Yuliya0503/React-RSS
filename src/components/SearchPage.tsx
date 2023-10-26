@@ -1,5 +1,5 @@
 import React from 'react';
-import { ISearchPageState } from '../types/types';
+import { ISearchPageState } from '../models/types';
 import SearchInput from './SearchInput';
 import SearchResult from './SearchResults';
 
