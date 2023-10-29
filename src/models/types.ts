@@ -1,4 +1,5 @@
 import { IPeople } from './ISWAPI';
+import React from 'react';
 
 export interface ICardPeopleProps {
   person: IPeople;
@@ -24,4 +25,13 @@ export interface AppState {
   loading: boolean;
   error: boolean;
   errorMessage?: string;
+}
+
+export interface IErrorBoundaryProps {
+  children: React.ReactNode;
+  errorMessage?: string;
+}
+
+export interface IErrorBoundaryState {
+  hasError: boolean;
 }

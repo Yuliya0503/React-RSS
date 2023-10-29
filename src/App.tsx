@@ -6,6 +6,7 @@ import { IPeople, IResponse } from './models/ISWAPI';
 import PostService from './API/CardService';
 import { AppState } from './models/types';
 import { ErrorMessage, defaultSearch } from './models/constants';
+import ErrorBoundary from './components/ErrorBoundary';
 
 export default class App extends React.Component<object, AppState> {
   constructor(props: object) {
@@ -58,14 +59,14 @@ export default class App extends React.Component<object, AppState> {
     }
 
     return (
-      <>
+      <ErrorBoundary>
         <SearchResult
           updateCards={this.updateCards}
           setLoading={this.setLoading}
           setError={this.setError}
         />
         <SearchPage cards={cards} error={error} />
-      </>
+      </ErrorBoundary>
     );
   }
 }
