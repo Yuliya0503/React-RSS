@@ -9,13 +9,16 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview",
-    "format:fix": "prettier --write .",
-    "lint:husky": "npm run format:fix && npm run lint"
+    "format:fix": "prettier --write ."
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:husky && git add ."
+      "pre-commit": "npm run format:fix && npm run lint:fix"
     }
+  },
+  "lint-staged": {
+    "*{ts, tsx}": "eslint --fix",
+    "*{ts, tsx, md, html, css}": "prettier --write"
   },
   "dependencies": {
     "react": "^18.2.0",
