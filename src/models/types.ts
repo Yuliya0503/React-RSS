@@ -1,4 +1,4 @@
-import { IPeople } from './ISWAPI';
+import { IPeople, IPlanet } from './ISWAPI';
 import React from 'react';
 
 export interface ICardPeopleProps {
@@ -34,4 +34,10 @@ export interface IErrorBoundaryProps {
 
 export interface IErrorBoundaryState {
   hasError: boolean;
+}
+
+export interface ICardPeopleState {
+  planet: IPlanet;
+  loading: boolean;
+  error: boolean;
 }

@@ -15,15 +15,17 @@ export default class SearchInput extends React.Component<
     };
   }
 
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ searchTerm: event.target.value.trim() });
   };
 
-  handleSearch = async (event: React.FormEvent) => {
+  handleSearch = async (event: React.FormEvent): Promise<void> => {
     const { updateCards, setLoading, setError } = this.props;
     event.preventDefault();
     const { searchTerm } = this.state;
-    const endPoint = searchTerm ? `?search=${searchTerm}` : defaultSearch;
+    const endPoint: string = searchTerm
+      ? `?search=${searchTerm}`
+      : defaultSearch;
     localStorage.setItem('lastSearch', searchTerm);
     try {
       setLoading(true);
@@ -37,7 +39,7 @@ export default class SearchInput extends React.Component<
     }
   };
 
-  render() {
+  render = (): JSX.Element => {
     const { searchTerm } = this.state;
     return (
       <form className={styles.form} onSubmit={this.handleSearch}>
@@ -53,5 +55,5 @@ export default class SearchInput extends React.Component<
         </button>
       </form>
     );
-  }
+  };
 }

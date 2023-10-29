@@ -10,18 +10,18 @@ export default class ErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): IErrorBoundaryState {
+  static getDerivedStateFromError = (error: Error): IErrorBoundaryState => {
     if (!error) {
       return { hasError: false };
     }
     return { hasError: true };
-  }
+  };
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+  componentDidCatch = (error: Error, errorInfo: React.ErrorInfo): void => {
     console.error('Caught an error:', error, errorInfo);
-  }
+  };
 
-  render() {
+  render = () => {
     if (this.state.hasError) {
       return (
         <div>
@@ -31,5 +31,5 @@ export default class ErrorBoundary extends React.Component<
       );
     }
     return this.props.children;
-  }
+  };
 }

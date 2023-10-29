@@ -6,11 +6,11 @@ import { ErrorMessage, NoResultMessage } from '../models/constants';
 import styles from './SearchPage.module.css';
 
 export default class SearchPage extends React.Component<ISearchPageProps> {
-  renderErrorMessage = () => {
+  renderErrorMessage = (): JSX.Element => {
     return <p>{ErrorMessage}</p>;
   };
 
-  renderCardPeople = (cards: IPeople[]) => {
+  renderCardPeople = (cards: IPeople[]): JSX.Element => {
     return (
       <section>
         {cards.map((card: IPeople) => (
@@ -20,11 +20,11 @@ export default class SearchPage extends React.Component<ISearchPageProps> {
     );
   };
 
-  renderNoResultMessage = () => {
+  renderNoResultMessage = (): JSX.Element => {
     return <p className={styles.mess}>{NoResultMessage}</p>;
   };
 
-  render() {
+  render = (): JSX.Element => {
     const { cards, error } = this.props;
     if (error) {
       return this.renderErrorMessage();
@@ -38,5 +38,5 @@ export default class SearchPage extends React.Component<ISearchPageProps> {
         </section>
       </div>
     );
-  }
+  };
 }

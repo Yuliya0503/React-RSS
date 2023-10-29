@@ -2,7 +2,7 @@ import { IResponse } from '../models/ISWAPI';
 import ConstantsURL from './constants';
 
 export default class PostService {
-  static async getPeople(opt?: string): Promise<IResponse> {
+  static getPeople = async (opt?: string): Promise<IResponse> => {
     try {
       const url: string = opt
         ? ConstantsURL.PEOPLE_URL + opt
@@ -15,9 +15,9 @@ export default class PostService {
       }
       const data: IResponse = await response.json();
       return data;
-    } catch (error) {
+    } catch (error: Error | unknown) {
       console.error(`Error while fetching data: ${error}`);
       throw error;
     }
-  }
+  };
 }
