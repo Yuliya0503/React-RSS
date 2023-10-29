@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import styles from './App.module.css';
 import SearchPage from './components/SearchPage';
 import SearchResult from './components/SearchResults';
 import { IPeople, IResponse } from './models/ISWAPI';
@@ -34,18 +34,35 @@ export default class App extends React.Component<object, AppState> {
 
   setError = (result: boolean) => this.setState({ error: result });
 
-  componentDidMount(): void {
+  componentDidMount = (): void => {
     const lastSearch = localStorage.getItem('lastSearch');
     const searchParam = lastSearch ? `search=${lastSearch}` : defaultSearch;
     this.setCards(searchParam);
-  }
+  };
+
+  generateError = () => {
+    try {
+      throw new Error('Oops! Error!');
+    } catch (error: Error | unknown) {
+      if (error instanceof Error) {
+        this.setState({ error: true, errorMessage: error.message });
+        console.error(error.message);
+      } else {
+        this.setState({ error: true });
+      }
+    }
+  };
 
   renderLoading = () => {
-    return <p>Loading...</p>;
+    return <p className={styles.loading}>Loading...</p>;
   };
 
   renderError = () => {
-    return <p>{ErrorMessage}</p>;
+    return (
+      <ErrorBoundary errorMessage={this.state.errorMessage}>
+        <p className={styles.errorMess}>{ErrorMessage}</p>
+      </ErrorBoundary>
+    );
   };
 
   render() {
@@ -60,12 +77,17 @@ export default class App extends React.Component<object, AppState> {
 
     return (
       <ErrorBoundary>
-        <SearchResult
-          updateCards={this.updateCards}
-          setLoading={this.setLoading}
-          setError={this.setError}
-        />
-        <SearchPage cards={cards} error={error} />
+        <div className={styles.root}>
+          <button className={styles.errBtn} onClick={this.generateError}>
+            Oops! Error!
+          </button>
+          <SearchResult
+            updateCards={this.updateCards}
+            setLoading={this.setLoading}
+            setError={this.setError}
+          />
+          <SearchPage cards={cards} error={error} />
+        </div>
       </ErrorBoundary>
     );
   }

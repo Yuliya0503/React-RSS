@@ -1,0 +1,42 @@
+.root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.errBtn {
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 15px 15px;
+  border: 1px solid #000000;
+  background-color: #fff000;
+  color: #000000;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.errorMess {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: #fff000;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: #fff000;
+  animation: scale 5s infinite linear;
+}
+
+@keyframes scale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.4);
+  }
+}

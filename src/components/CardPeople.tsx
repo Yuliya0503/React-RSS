@@ -1,5 +1,6 @@
 import React from 'react';
 import { ICardPeopleProps } from '../models/types';
+import styles from './cardPeople.module.css';
 
 export default class CardPeople extends React.Component<ICardPeopleProps> {
   constructor(props: ICardPeopleProps) {
@@ -9,7 +10,7 @@ export default class CardPeople extends React.Component<ICardPeopleProps> {
   render() {
     const { person } = this.props;
     return (
-      <div className="people-card">
+      <div className={styles.people_card}>
         <h2>{person.name}</h2>
         <p>Gender: {person.gender}</p>
         <p>Birth Year: {person.birth_year}</p>

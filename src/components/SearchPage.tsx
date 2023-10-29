@@ -3,6 +3,7 @@ import { IPeople } from '../models/ISWAPI';
 import CardPeople from './CardPeople';
 import { ISearchPageProps } from '../models/types';
 import { ErrorMessage, NoResultMessage } from '../models/constants';
+import styles from './SearchPage.module.css';
 
 export default class SearchPage extends React.Component<ISearchPageProps> {
   renderErrorMessage = () => {
@@ -20,7 +21,7 @@ export default class SearchPage extends React.Component<ISearchPageProps> {
   };
 
   renderNoResultMessage = () => {
-    return <p>{NoResultMessage}</p>;
+    return <p className={styles.mess}>{NoResultMessage}</p>;
   };
 
   render() {
@@ -29,10 +30,12 @@ export default class SearchPage extends React.Component<ISearchPageProps> {
       return this.renderErrorMessage();
     }
     return (
-      <div>
-        {cards.length
-          ? this.renderCardPeople(cards)
-          : this.renderNoResultMessage()}
+      <div className={styles.wrapper}>
+        <section className={styles.cards}>
+          {cards.length
+            ? this.renderCardPeople(cards)
+            : this.renderNoResultMessage()}
+        </section>
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { IResponse } from '../models/ISWAPI';
 import PostService from '../API/CardService';
 import { ISearchState, ISearchInputProps } from '../models/types';
 import { defaultSearch } from '../models/constants';
-
+import styles from './SearchInput.module.css';
 export default class SearchInput extends React.Component<
   ISearchInputProps,
   ISearchState
@@ -40,14 +40,17 @@ export default class SearchInput extends React.Component<
   render() {
     const { searchTerm } = this.state;
     return (
-      <form onSubmit={this.handleSearch}>
+      <form className={styles.form} onSubmit={this.handleSearch}>
         <input
+          className={styles.input}
           type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={this.handleInputChange}
         />
-        <button type="submit">Search</button>
+        <button className={styles.input_btn} type="submit">
+          Search
+        </button>
       </form>
     );
   }
