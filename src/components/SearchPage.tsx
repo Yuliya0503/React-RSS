@@ -1,34 +1,38 @@
 import React from 'react';
-//import { ISearchPageState } from '../models/types';
-//import SearchInput from './SearchInput';
 import { IPeople } from '../models/ISWAPI';
 import CardPeople from './CardPeople';
+import { ISearchPageProps } from '../models/types';
+import { ErrorMessage, NoResultMessage } from '../models/constants';
 
-interface ISearchPage {
-  cards: IPeople[];
-  error: boolean;
-}
+export default class SearchPage extends React.Component<ISearchPageProps> {
+  renderErrorMessage = () => {
+    return <p>{ErrorMessage}</p>;
+  };
 
-export default class SearchPage extends React.Component<ISearchPage> {
-  constructor(props: ISearchPage) {
-    super(props);
-  }
+  renderCardPeople = (cards: IPeople[]) => {
+    return (
+      <section>
+        {cards.map((card: IPeople) => (
+          <CardPeople key={card.url} person={card} />
+        ))}
+      </section>
+    );
+  };
+
+  renderNoResultMessage = () => {
+    return <p>{NoResultMessage}</p>;
+  };
+
   render() {
     const { cards, error } = this.props;
     if (error) {
-      return <p>error!!! reload page</p>;
+      return this.renderErrorMessage();
     }
     return (
       <div>
-        <section>
-          {cards?.length ? (
-            cards.map((card: IPeople) => (
-              <CardPeople key={card.url} person={card} />
-            ))
-          ) : (
-            <p>No result</p>
-          )}
-        </section>
+        {cards.length
+          ? this.renderCardPeople(cards)
+          : this.renderNoResultMessage()}
       </div>
     );
   }

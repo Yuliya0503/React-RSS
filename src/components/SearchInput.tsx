@@ -1,16 +1,8 @@
 import React from 'react';
-//import { ISearchInputProps } from '../models/types';
-import { IPeople, IResponse } from '../models/ISWAPI';
+import { IResponse } from '../models/ISWAPI';
 import PostService from '../API/CardService';
-interface ISearchState {
-  searchTerm: string;
-}
-
-interface ISearchInputProps {
-  updateCards: (newCards: IPeople[]) => void;
-  setLoading: (result: boolean) => void;
-  setError: (result: boolean) => void;
-}
+import { ISearchState, ISearchInputProps } from '../models/types';
+import { defaultSearch } from '../models/constants';
 
 export default class SearchInput extends React.Component<
   ISearchInputProps,
@@ -31,16 +23,12 @@ export default class SearchInput extends React.Component<
     const { updateCards, setLoading, setError } = this.props;
     event.preventDefault();
     const { searchTerm } = this.state;
-    console.log(`Поисковый запрос: ${searchTerm}`);
-    const endPoint = searchTerm ? `?search=${searchTerm}` : '?page=1';
-    console.log(endPoint);
+    const endPoint = searchTerm ? `?search=${searchTerm}` : defaultSearch;
     localStorage.setItem('lastSearch', searchTerm);
     try {
       setLoading(true);
       const { results }: IResponse = await PostService.getPeople(endPoint);
-      console.log(results);
       updateCards(results);
-      console.log('ok');
       setLoading(false);
     } catch (error) {
       console.error(`Error: ${error}`);

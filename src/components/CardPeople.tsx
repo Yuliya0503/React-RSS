@@ -1,9 +1,5 @@
 import React from 'react';
-import { IPeople } from '../models/ISWAPI';
-
-interface ICardPeopleProps {
-  person: IPeople;
-}
+import { ICardPeopleProps } from '../models/types';
 
 export default class CardPeople extends React.Component<ICardPeopleProps> {
   constructor(props: ICardPeopleProps) {

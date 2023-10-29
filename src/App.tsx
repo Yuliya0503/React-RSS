@@ -4,24 +4,17 @@ import SearchPage from './components/SearchPage';
 import SearchResult from './components/SearchResults';
 import { IPeople, IResponse } from './models/ISWAPI';
 import PostService from './API/CardService';
-
-interface AppState {
-  cards: IPeople[];
-  loading: boolean;
-  error: boolean;
-  errorMessage?: string;
-}
-
-const initialState: AppState = {
-  cards: [],
-  loading: true,
-  error: false,
-};
+import { AppState } from './models/types';
+import { ErrorMessage, defaultSearch } from './models/constants';
 
 export default class App extends React.Component<object, AppState> {
   constructor(props: object) {
     super(props);
-    this.state = initialState;
+    this.state = {
+      cards: [],
+      loading: true,
+      error: false,
+    };
   }
 
   setCards = async (options?: string) => {
@@ -41,20 +34,29 @@ export default class App extends React.Component<object, AppState> {
   setError = (result: boolean) => this.setState({ error: result });
 
   componentDidMount(): void {
-    const defaultSearch = '?page=1';
     const lastSearch = localStorage.getItem('lastSearch');
     const searchParam = lastSearch ? `search=${lastSearch}` : defaultSearch;
     this.setCards(searchParam);
   }
 
+  renderLoading = () => {
+    return <p>Loading...</p>;
+  };
+
+  renderError = () => {
+    return <p>{ErrorMessage}</p>;
+  };
+
   render() {
     const { loading, error, cards } = this.state;
+
     if (loading) {
-      return <p>Loading...</p>;
+      return this.renderLoading();
     }
     if (error) {
-      return <p>error data, reload page</p>;
+      return this.renderError();
     }
+
     return (
       <>
         <SearchResult
