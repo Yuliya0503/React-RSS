@@ -1,20 +1,21 @@
 import React from 'react';
-import { ISearchResultsProps } from '../models/types';
-
-export default class SearchResult extends React.Component<ISearchResultsProps> {
+import { IPeople } from '../models/ISWAPI';
+import SearchInput from './SearchInput';
+interface ISearchResultProps {
+  updateCards: (newCards: IPeople[]) => void;
+  setLoading: (result: boolean) => void;
+  setError: (result: boolean) => void;
+}
+export default class SearchResult extends React.Component<ISearchResultProps> {
+  constructor(props: ISearchResultProps) {
+    super(props);
+  }
   render() {
-    const { searchResult } = this.props;
     return (
-      <div>
-        <ul>
-          {searchResult.map((result, index) => (
-            <li key={index}>
-              <h3>{result.name}</h3>
-              <p>{result.description}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <header>
+        <h1>Star Wars</h1>
+        <SearchInput {...this.props} />
+      </header>
     );
   }
 }

@@ -15,6 +15,7 @@ export interface IPeople {
   starships: string[] | IStarship[];
   url: string;
   vehicles: string[] | IVehicle[];
+  [key: string]: unknown;
 }
 
 export interface IFilm {
@@ -113,11 +114,5 @@ export interface IResponse {
   count: number;
   next: string | string;
   previous: string | null;
-  results:
-    | IPeople[]
-    | IFilm[]
-    | IPlanet[]
-    | ISpecie[]
-    | IStarship[]
-    | IVehicle[];
+  results: IPeople[];
 }

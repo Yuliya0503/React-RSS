@@ -1,48 +1,34 @@
 import React from 'react';
-import { ISearchPageState } from '../models/types';
-import SearchInput from './SearchInput';
-import SearchResult from './SearchResults';
+//import { ISearchPageState } from '../models/types';
+//import SearchInput from './SearchInput';
+import { IPeople } from '../models/ISWAPI';
+import CardPeople from './CardPeople';
 
-export default class SearchPage extends React.Component<
-  object,
-  ISearchPageState
-> {
-  constructor(props: object) {
+interface ISearchPage {
+  cards: IPeople[];
+  error: boolean;
+}
+
+export default class SearchPage extends React.Component<ISearchPage> {
+  constructor(props: ISearchPage) {
     super(props);
-    this.state = {
-      searchTerm: '',
-      searchResult: [],
-    };
   }
-
-  componentDidMount(): void {
-    const savedSearchTerm = localStorage.getItem('searchTerm') as string;
-    if (savedSearchTerm) {
-      this.setState({ searchTerm: savedSearchTerm });
+  render() {
+    const { cards, error } = this.props;
+    if (error) {
+      return <p>error!!! reload page</p>;
     }
-    this.performSearch(savedSearchTerm);
-  }
-
-  handleSearchInput = (searchTerm: string) => {
-    this.setState({ searchTerm: searchTerm.trim() });
-  };
-
-  performSearch = (searchTerm: string) => {
-    if (searchTerm) {
-      localStorage.setItem('searchTerm', searchTerm);
-    }
-    this.setState({ searchResult: [] });
-  };
-
-  render(): React.ReactNode {
     return (
       <div>
-        <SearchInput
-          searchTerm={this.state.searchTerm}
-          onSearch={this.performSearch}
-          onSearchInputChange={this.handleSearchInput}
-        />
-        <SearchResult searchResult={this.state.searchResult} />
+        <section>
+          {cards?.length ? (
+            cards.map((card: IPeople) => (
+              <CardPeople key={card.url} person={card} />
+            ))
+          ) : (
+            <p>No result</p>
+          )}
+        </section>
       </div>
     );
   }
