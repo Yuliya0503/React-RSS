@@ -1,0 +1,8 @@
+.wrapper section:nth-child(1) {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  width: 100%;
+}
