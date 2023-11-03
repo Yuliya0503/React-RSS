@@ -1,94 +1,89 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './App.module.css';
 import SearchPage from './components/SearchPage';
 import SearchResult from './components/SearchResults';
 import { IPeople, IResponse } from './models/ISWAPI';
-import { AppState } from './models/types';
 import { ErrorMessage, defaultSearch } from './models/constants';
 import ErrorBoundary from './components/ErrorBoundary';
 import getPeople from './API/CardService';
 
-export default class App extends React.Component<object, AppState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      cards: [],
-      loading: true,
-      error: false,
-    };
-  }
+interface AppProps {}
 
-  setCards = async (options?: string) => {
+const App: React.FC<AppProps> = () => {
+  const [cards, setCards] = useState<IPeople[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const updateCards = (newCards: IPeople[]) => setCards(newCards);
+
+  const fetchData = async (options?: string) => {
     try {
       const { results }: IResponse = await getPeople(options);
-      this.setState({ cards: results, loading: false });
+      setCards(results);
+      setLoading(false);
     } catch (error) {
       console.error(`Error: ${error}`);
-      this.setState({ loading: false, error: true });
+      setErrorMessage(error instanceof Error ? error.message : '');
+      setLoading(false);
+      setError(true);
     }
   };
 
-  updateCards = (newCards: IPeople[]) => this.setState({ cards: newCards });
-
-  setLoading = (result: boolean) => this.setState({ loading: result });
-
-  setError = (result: boolean) => this.setState({ error: result });
-
-  componentDidMount = (): void => {
-    const lastSearch = localStorage.getItem('lastSearch');
-    const searchParam = lastSearch ? `search=${lastSearch}` : defaultSearch;
-    this.setCards(searchParam);
-  };
-
-  generateError = () => {
+  const generateError = () => {
     try {
       throw new Error('Oops! Error!');
     } catch (error: Error | unknown) {
       if (error instanceof Error) {
-        this.setState({ error: true, errorMessage: error.message });
-        console.error(error.message);
+        setErrorMessage(error.message);
+        setError(true);
       } else {
-        this.setState({ error: true });
+        setError(true);
       }
     }
   };
 
-  renderLoading = () => {
+  useEffect(() => {
+    const lastSearch = localStorage.getItem('lastSearch');
+    const searchParam = lastSearch ? `search=${lastSearch}` : defaultSearch;
+    fetchData(searchParam);
+  }, []);
+
+  const renderLoading = () => {
     return <p className={styles.loading}>Loading...</p>;
   };
 
-  renderError = () => {
+  const renderError = () => {
     return (
-      <ErrorBoundary errorMessage={this.state.errorMessage}>
+      <ErrorBoundary errorMessage={errorMessage}>
         <p className={styles.errorMess}>{ErrorMessage}</p>
       </ErrorBoundary>
     );
   };
 
-  render() {
-    const { loading, error, cards } = this.state;
-
-    if (loading) {
-      return this.renderLoading();
-    }
-    if (error) {
-      return this.renderError();
-    }
-
-    return (
-      <ErrorBoundary>
-        <div className={styles.root}>
-          <button className={styles.errBtn} onClick={this.generateError}>
-            Oops! Error!
-          </button>
-          <SearchResult
-            updateCards={this.updateCards}
-            setLoading={this.setLoading}
-            setError={this.setError}
-          />
-          <SearchPage cards={cards} error={error} />
-        </div>
-      </ErrorBoundary>
-    );
+  if (error) {
+    return renderError();
   }
-}
+
+  if (loading) {
+    return renderLoading();
+  }
+
+  return (
+    <ErrorBoundary>
+      <div className={styles.root}>
+        <button className={styles.errBtn} onClick={generateError}>
+          Oops! Error!
+        </button>
+        <SearchResult
+          updateCards={updateCards}
+          setLoading={setLoading}
+          setError={setError}
+        />
+        <SearchPage cards={cards} error={error} />
+      </div>
+    </ErrorBoundary>
+  );
+};
+
+export default App;
