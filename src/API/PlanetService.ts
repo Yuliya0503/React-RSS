@@ -3,7 +3,7 @@ import { IPlanet } from '../models/ISWAPI';
 const getPlanet = async (url: string): Promise<IPlanet> => {
   try {
     const response: Response = await fetch(url);
-    if (response.status !== 200) {
+    if (!response.ok) {
       throw new Error(`Network request failed with status: ${response.status}`);
     }
     const data: IPlanet = await response.json();
