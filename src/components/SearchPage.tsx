@@ -5,12 +5,12 @@ import { ISearchPageProps } from '../models/types';
 import { ErrorMessage, NoResultMessage } from '../models/constants';
 import styles from './SearchPage.module.css';
 
-export default class SearchPage extends React.Component<ISearchPageProps> {
-  renderErrorMessage = (): JSX.Element => {
+const SearchPage: React.FC<ISearchPageProps> = ({ cards, error }) => {
+  const renderErrorMessage = (): JSX.Element => {
     return <p>{ErrorMessage}</p>;
   };
 
-  renderCardPeople = (cards: IPeople[]): JSX.Element => {
+  const renderCardPeople = (cards: IPeople[]): JSX.Element => {
     return (
       <section>
         {cards.map((card: IPeople) => (
@@ -20,23 +20,21 @@ export default class SearchPage extends React.Component<ISearchPageProps> {
     );
   };
 
-  renderNoResultMessage = (): JSX.Element => {
+  const renderNoResultMessage = (): JSX.Element => {
     return <p className={styles.mess}>{NoResultMessage}</p>;
   };
 
-  render = (): JSX.Element => {
-    const { cards, error } = this.props;
-    if (error) {
-      return this.renderErrorMessage();
-    }
-    return (
-      <div className={styles.wrapper}>
+  return (
+    <div className={styles.wrapper}>
+      {error ? (
+        renderErrorMessage()
+      ) : (
         <section className={styles.cards}>
-          {cards.length
-            ? this.renderCardPeople(cards)
-            : this.renderNoResultMessage()}
+          {cards.length ? renderCardPeople(cards) : renderNoResultMessage()}
         </section>
-      </div>
-    );
-  };
-}
+      )}
+    </div>
+  );
+};
+
+export default SearchPage;
