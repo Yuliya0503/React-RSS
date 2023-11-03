@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { IResponse } from '../models/ISWAPI';
-import { ISearchInputProps } from '../models/types';
-import { defaultSearch } from '../models/constants';
+import { IResponse } from '../../models/ISWAPI';
+import { ISearchInputProps } from '../../models/types';
+import { defaultSearch } from '../../models/constants';
 import styles from './SearchInput.module.css';
-import getPeople from '../API/CardService';
+import getPeople from '../../API/CardService';
 
 const SearchInput: React.FC<ISearchInputProps> = ({
   updateCards,

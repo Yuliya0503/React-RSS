@@ -1,8 +1,8 @@
 import React from 'react';
-import { IPeople } from '../models/ISWAPI';
-import CardPeople from './CardPeople';
-import { ISearchPageProps } from '../models/types';
-import { ErrorMessage, NoResultMessage } from '../models/constants';
+import { IPeople } from '../../models/ISWAPI';
+import CardPeople from '../CardPeople/CardPeople';
+import { ISearchPageProps } from '../../models/types';
+import { ErrorMessage, NoResultMessage } from '../../models/constants';
 import styles from './SearchPage.module.css';
 
 const SearchPage: React.FC<ISearchPageProps> = ({ cards, error }) => {

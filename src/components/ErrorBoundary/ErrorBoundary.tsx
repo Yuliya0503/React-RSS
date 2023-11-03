@@ -1,7 +1,7 @@
 import React from 'react';
-import { IErrorBoundaryProps, IErrorBoundaryState } from '../models/types';
-import styles from '../App.module.css';
-import { ErrorMessage } from '../models/constants';
+import { IErrorBoundaryProps, IErrorBoundaryState } from '../../models/types';
+import styles from '../../App.module.css';
+import { ErrorMessage } from '../../models/constants';
 export default class ErrorBoundary extends React.Component<
   IErrorBoundaryProps,
   IErrorBoundaryState

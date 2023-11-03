@@ -1,6 +1,6 @@
 import React from 'react';
-import SearchInput from './SearchInput';
-import { ISearchInputProps } from '../models/types';
+import SearchInput from '../SearchInput/SearchInput';
+import { ISearchInputProps } from '../../models/types';
 import styles from './SearchResults.module.css';
 
 const SearchResult: React.FC<ISearchInputProps> = (props) => {

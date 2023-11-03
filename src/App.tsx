@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styles from './App.module.css';
-import SearchPage from './components/SearchPage';
-import SearchResult from './components/SearchResults';
+import SearchPage from './components/SearchPage/SearchPage';
+import SearchResult from './components/SearchResults/SearchResults';
 import { IPeople, IResponse } from './models/ISWAPI';
 import { ErrorMessage, defaultSearch } from './models/constants';
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import getPeople from './API/CardService';
 
 interface AppProps {}
