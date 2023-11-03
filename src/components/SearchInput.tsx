@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { IResponse } from '../models/ISWAPI';
-import PostService from '../API/CardService';
 import { ISearchInputProps } from '../models/types';
 import { defaultSearch } from '../models/constants';
 import styles from './SearchInput.module.css';
+import getPeople from '../API/CardService';
 
 const SearchInput: React.FC<ISearchInputProps> = ({
   updateCards,
@@ -28,7 +28,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({
     localStorage.setItem('lastSearch', searchTerm);
     try {
       setLoading(true);
-      const { results }: IResponse = await PostService.getPeople(endPoint);
+      const { results }: IResponse = await getPeople(endPoint);
       updateCards(results);
       setLoading(false);
     } catch (error) {

@@ -3,10 +3,10 @@ import styles from './App.module.css';
 import SearchPage from './components/SearchPage';
 import SearchResult from './components/SearchResults';
 import { IPeople, IResponse } from './models/ISWAPI';
-import PostService from './API/CardService';
 import { AppState } from './models/types';
 import { ErrorMessage, defaultSearch } from './models/constants';
 import ErrorBoundary from './components/ErrorBoundary';
+import getPeople from './API/CardService';
 
 export default class App extends React.Component<object, AppState> {
   constructor(props: object) {
@@ -20,7 +20,7 @@ export default class App extends React.Component<object, AppState> {
 
   setCards = async (options?: string) => {
     try {
-      const { results }: IResponse = await PostService.getPeople(options);
+      const { results }: IResponse = await getPeople(options);
       this.setState({ cards: results, loading: false });
     } catch (error) {
       console.error(`Error: ${error}`);

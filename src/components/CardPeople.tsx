@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ICardPeopleProps } from '../models/types';
 import styles from './cardPeople.module.css';
-import PlanetService from '../API/PlanetService';
+import getPlanet from '../API/PlanetService';
 
 const CardPeople: React.FC<ICardPeopleProps> = ({ person }) => {
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ const CardPeople: React.FC<ICardPeopleProps> = ({ person }) => {
 
   const setPlanet = useCallback(async (url: string): Promise<void> => {
     try {
-      const planetInfo = await PlanetService.getPlanet(url);
+      const planetInfo = await getPlanet(url);
       setPlanetName(planetInfo.name);
       setLoading(false);
     } catch (error: Error | unknown) {
