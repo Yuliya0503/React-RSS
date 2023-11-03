@@ -1,6 +1,7 @@
 import React from 'react';
 import { IErrorBoundaryProps, IErrorBoundaryState } from '../models/types';
 import styles from '../App.module.css';
+import { ErrorMessage } from '../models/constants';
 export default class ErrorBoundary extends React.Component<
   IErrorBoundaryProps,
   IErrorBoundaryState
@@ -21,12 +22,11 @@ export default class ErrorBoundary extends React.Component<
     console.error('Caught an error:', error, errorInfo);
   };
 
-  render = () => {
+  render = (): React.ReactNode => {
     if (this.state.hasError) {
       return (
         <div>
-          <h2 className={styles.errorMess}>Something went wrong.</h2>
-          <p className={styles.errorMess}>Sorry, an error occurred.</p>
+          <h2 className={styles.errorMess}>{ErrorMessage}</h2>
         </div>
       );
     }

@@ -70,7 +70,7 @@ const App: React.FC<AppProps> = () => {
   }
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary errorMessage={errorMessage}>
       <div className={styles.root}>
         <button className={styles.errBtn} onClick={generateError}>
           Oops! Error!
