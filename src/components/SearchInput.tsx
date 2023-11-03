@@ -24,7 +24,7 @@ export default class SearchInput extends React.Component<
     event.preventDefault();
     const { searchTerm } = this.state;
     const endPoint: string = searchTerm
-      ? `?search=${searchTerm}`
+      ? `search=${searchTerm}`
       : defaultSearch;
     localStorage.setItem('lastSearch', searchTerm);
     try {

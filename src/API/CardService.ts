@@ -5,7 +5,7 @@ export default class PostService {
   static getPeople = async (opt?: string): Promise<IResponse> => {
     try {
       const url: string = opt
-        ? ConstantsURL.PEOPLE_URL + opt
+        ? ConstantsURL.PEOPLE_URL + '?' + opt
         : ConstantsURL.PEOPLE_URL;
       const response: Response = await fetch(url);
       if (response.status !== 200) {
