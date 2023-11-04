@@ -1,9 +1,9 @@
 import React from 'react';
 import SearchInput from '../SearchInput/SearchInput';
 import { ISearchInputProps } from '../../models/types';
-import styles from './SearchResults.module.css';
+import styles from './Header.module.css';
 
-const SearchResult: React.FC<ISearchInputProps> = (props) => {
+const Header: React.FC<ISearchInputProps> = (props) => {
   const { updateCards, setLoading, setError } = props;
   return (
     <header className={styles.header}>
@@ -17,4 +17,4 @@ const SearchResult: React.FC<ISearchInputProps> = (props) => {
   );
 };
 
-export default SearchResult;
+export default Header;

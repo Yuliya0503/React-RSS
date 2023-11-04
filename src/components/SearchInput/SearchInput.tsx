@@ -4,6 +4,8 @@ import { ISearchInputProps } from '../../models/types';
 import { defaultSearch } from '../../models/constants';
 import styles from './SearchInput.module.css';
 import getPeople from '../../API/CardService';
+import SearchField from '../SearchField/SearchField';
+import SearchButton from '../SearchButton/SearchButton';
 
 const SearchInput: React.FC<ISearchInputProps> = ({
   updateCards,
@@ -40,16 +42,11 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 
   return (
     <form className={styles.form} onSubmit={handleSearch}>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Search"
-        value={searchTerm}
-        onChange={handleInputChange}
+      <SearchField
+        searchTerm={searchTerm}
+        handleInputChange={handleInputChange}
       />
-      <button className={styles.input_btn} type="submit">
-        Search
-      </button>
+      <SearchButton />
     </form>
   );
 };

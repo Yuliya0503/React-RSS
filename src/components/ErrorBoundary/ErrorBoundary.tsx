@@ -1,7 +1,7 @@
 import React from 'react';
 import { IErrorBoundaryProps, IErrorBoundaryState } from '../../models/types';
-import styles from '../../App.module.css';
-import { ErrorMessage } from '../../models/constants';
+
+import ErrorSection from '../Error/ErrorSection';
 export default class ErrorBoundary extends React.Component<
   IErrorBoundaryProps,
   IErrorBoundaryState
@@ -24,11 +24,7 @@ export default class ErrorBoundary extends React.Component<
 
   render = (): React.ReactNode => {
     if (this.state.hasError) {
-      return (
-        <div>
-          <h2 className={styles.errorMess}>{ErrorMessage}</h2>
-        </div>
-      );
+      return <ErrorSection />;
     }
     return this.props.children;
   };

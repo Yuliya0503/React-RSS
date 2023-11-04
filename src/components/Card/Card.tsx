@@ -1,10 +1,10 @@
 import React from 'react';
 import { ICardPeopleProps } from '../../models/types';
-import styles from './cardPeople.module.css';
+import styles from './card.module.css';
 import PlanetInfo from '../PlanetInfo/PlanetInfo';
 import CharacterInfo from '../CharacterInfo/CharacterInfo';
 
-const CardPeople: React.FC<ICardPeopleProps> = ({ person }) => {
+const Card: React.FC<ICardPeopleProps> = ({ person }) => {
   return (
     <div className={styles.people_card}>
       <CharacterInfo person={person} />
@@ -13,4 +13,4 @@ const CardPeople: React.FC<ICardPeopleProps> = ({ person }) => {
   );
 };
 
-export default CardPeople;
+export default Card;
