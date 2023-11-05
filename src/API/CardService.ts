@@ -3,13 +3,14 @@ import ConstantsURL from './constants';
 
 const getPeople = async (
   page?: string | number,
-  secrch?: string
+  search?: string
 ): Promise<IResponse> => {
   try {
-    const serches = secrch
-      ? `${ConstantsURL.PEOPLE_URL}?${secrch}&`
-      : `${ConstantsURL.PEOPLE_URL}?`;
-    const url = `${serches}page=${page}`;
+    const baseUrl = ConstantsURL.PEOPLE_URL;
+    const searchParam = search ? `search=${search}` : '';
+    const pageParam = search ? '' : `page=${page || 1}`;
+    const query = [searchParam, pageParam].filter(Boolean).join('&');
+    const url = `${baseUrl}${query ? `?${query}` : ''}`;
     const response: Response = await fetch(url, {
       method: 'GET',
       headers: {

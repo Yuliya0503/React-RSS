@@ -23,7 +23,9 @@ const SearchPage: React.FC<ISearchPageProps> = ({
   ));
 
   async function handlePageClick(pageNumber: number) {
+    console.log('SearchPahe:', pageNumber);
     navigate(`/page/${pageNumber}`);
+    localStorage.setItem('PageNumber', pageNumber.toString());
     setLoading(true);
     const { results }: IResponse = await getPeople(pageNumber);
     setCards(results);
