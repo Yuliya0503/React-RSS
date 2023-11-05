@@ -1,5 +1,5 @@
 import { IPeople, IPlanet } from './ISWAPI';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 export interface ICardPeopleProps {
   person: IPeople;
@@ -18,6 +18,9 @@ export interface ISearchInputProps {
 export interface ISearchPageProps {
   cards: IPeople[];
   error: boolean;
+  countPages: number;
+  setCards: Dispatch<SetStateAction<IPeople[]>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface AppState {

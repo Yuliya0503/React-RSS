@@ -1,13 +1,23 @@
 import { IResponse } from '../models/ISWAPI';
 import ConstantsURL from './constants';
 
-const getPeople = async (opt?: string): Promise<IResponse> => {
+const getPeople = async (
+  page?: string | number,
+  secrch?: string
+): Promise<IResponse> => {
   try {
-    const url: string = opt
-      ? `${ConstantsURL.PEOPLE_URL}?${opt}`
-      : ConstantsURL.PEOPLE_URL;
-
-    const response: Response = await fetch(url);
+    const serches = secrch
+      ? `${ConstantsURL.PEOPLE_URL}?${secrch}&`
+      : `${ConstantsURL.PEOPLE_URL}?`;
+    const url = `${serches}page=${page}`;
+    const response: Response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Connection: 'keep-alive',
+      },
+    });
+    console.log(url);
 
     if (!response.ok) {
       throw new Error(`Network request failed with status: ${response.status}`);

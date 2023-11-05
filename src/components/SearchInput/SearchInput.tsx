@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IResponse } from '../../models/ISWAPI';
 import { ISearchInputProps } from '../../models/types';
-import { defaultSearch } from '../../models/constants';
+//import { defaultSearch } from '../../models/constants';
 import styles from './SearchInput.module.css';
 import getPeople from '../../API/CardService';
 import SearchField from '../SearchField/SearchField';
@@ -24,9 +24,8 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 
   const handleSearch = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    const endPoint: string = searchTerm
-      ? `search=${searchTerm}`
-      : defaultSearch;
+    const endPoint = searchTerm ? `?search=${searchTerm}` : '?page=1';
+    console.log(endPoint);
     localStorage.setItem('lastSearch', searchTerm);
     try {
       setLoading(true);
