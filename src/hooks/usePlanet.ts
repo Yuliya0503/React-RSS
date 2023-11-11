@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import getPlanet from '../../API/PlanetService';
+import { useEffect, useState } from 'react';
+import getPlanet from '../API/PlanetService';
 
-interface IPlanetInfo {
-  homeworld: string;
-}
-
-const PlanetInfo: React.FC<IPlanetInfo> = ({ homeworld }) => {
+const usePlanet = (homeworld: string) => {
   const [planetName, setPlanetName] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -25,9 +21,7 @@ const PlanetInfo: React.FC<IPlanetInfo> = ({ homeworld }) => {
     fetchPlanet();
   }, [homeworld]);
 
-  return (
-    <p>Home World: {loading ? 'Loading' : error ? 'Oops!' : planetName}</p>
-  );
+  return { planetName, loading, error };
 };
 
-export default PlanetInfo;
+export default usePlanet;
