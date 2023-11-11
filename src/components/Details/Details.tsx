@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { usePerson } from '../../hooks/usePerson';
 import Loading from '../Loading/Loading';
 import ErrorSection from '../Error/ErrorSection';
@@ -8,9 +8,10 @@ const Details = (): JSX.Element | null => {
   const { id } = useParams() as { id: string };
   const [person, error, isLoading] = usePerson(+id);
   const navigate = useNavigate();
+  const { search } = useLocation();
 
   const handleClick = (): void => {
-    navigate('/');
+    navigate(`/${search}`);
   };
 
   if (isLoading) return <Loading />;
