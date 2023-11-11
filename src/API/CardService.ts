@@ -1,23 +1,22 @@
-import { IResponse } from '../models/ISWAPI';
+import { IPeople, IResponse } from '../models/ISWAPI';
 import ConstantsURL from './constants';
 
-const getPeople = async (
-  page?: string | number,
-  search?: string
+const baseUrl = ConstantsURL.PEOPLE_URL;
+
+export const getPeople = async (
+  page: number,
+  search: string,
+  limit: number,
+  options: RequestInit = {}
 ): Promise<IResponse> => {
   try {
-    const baseUrl = ConstantsURL.PEOPLE_URL;
-    const searchParam = search ? `search=${search}` : '';
-    const pageParam = search ? '' : `page=${page || 1}`;
-    const query = [searchParam, pageParam].filter(Boolean).join('&');
-    const url = `${baseUrl}${query ? `?${query}` : ''}`;
-    const response: Response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Connection: 'keep-alive',
-      },
-    });
+    const searchParams = new URLSearchParams();
+    search && searchParams.append('search', search);
+    page && searchParams.append('page', page.toString());
+    limit && searchParams.append('limit', limit.toString());
+    const url = baseUrl + '?' + searchParams;
+    const response: Response = await fetch(url, options);
+
     console.log(url);
 
     if (!response.ok) {
@@ -30,4 +29,13 @@ const getPeople = async (
     throw error;
   }
 };
-export default getPeople;
+export const getPerson = async (
+  id: number,
+  options: RequestInit = {}
+): Promise<IPeople> => {
+  const response = await fetch(baseUrl + id, options);
+  if (!response.ok) {
+    throw new Error(`Network request failed with status: ${response.status}`);
+  }
+  return response.json();
+};
