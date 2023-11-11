@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Pagination } from '../Pagination/Pagination';
 import PeopleSection from '../PeopleSection/PeopleSection';
@@ -9,13 +9,14 @@ import {
   DEFAULT_LIMIT,
   SEARCH_PARAM_PAGE,
 } from '../../models/constants';
+import { useSearch } from '../../hooks/useSearch';
+import { useSearchDispatch } from '../../hooks/useSearchDispatch';
 
 interface SearchPageProps {}
 
 const SearchPage: React.FC<SearchPageProps> = () => {
-  const [searchTerm, setSearchTerm] = useState<string>(
-    localStorage.getItem('searchTerm') || ''
-  );
+  const searchTerm = useSearch();
+  const setSearchTerm = useSearchDispatch();
   const [currentPage, setCurrentPage] = useState<number>(DEFAULT_PAGE);
   const [limit, setLimit] = useState<number>(DEFAULT_LIMIT);
   const [data, isLoading, totalResults] = usePeope(
@@ -24,10 +25,6 @@ const SearchPage: React.FC<SearchPageProps> = () => {
     limit
   );
   const [searchParams, setSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    setSearchTerm(localStorage.getItem('searchTerm') || '');
-  }, []);
 
   const handleSearchClick = (search: string) => {
     setSearchTerm(search);
