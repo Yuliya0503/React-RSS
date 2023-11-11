@@ -1,56 +1,63 @@
 import styles from './Pagination.module.css';
+import React from 'react';
 
 interface PaginationProps {
   currentPage: number;
-  total: number;
-  limit: number;
+  totalItems: number;
+  itemsPerPage: number;
   onPageChange: (page: number) => void;
-  onLimitChage: (limit: number) => void;
+  onItemsPerPageChange: (itemsPerPage: number) => void;
 }
 
-const LIMIT = 10;
+const defaultItemsPerPage = 10;
 
 export const Pagination = ({
   currentPage,
-  total,
-  limit,
+  totalItems,
+  itemsPerPage,
   onPageChange,
-  onLimitChage,
+  onItemsPerPageChange,
 }: PaginationProps) => {
-  const pageCount = Math.ceil(total / LIMIT);
-  const isPrevBtnDisabled = currentPage <= 1;
-  const isNextBtnDisabled = currentPage >= pageCount;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const isPrevButtonDisabled = currentPage <= 1;
+  const isNextButtonDisabled = currentPage >= totalPages;
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onLimitChage(+e.target.value);
+  const handlePageChange = (newPage: number) => {
+    onPageChange(newPage);
+  };
+
+  const handleItemsPerPageChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    onItemsPerPageChange(+e.target.value);
   };
 
   return (
     <div className={styles.container}>
       <button
         className={styles.button}
-        disabled={isPrevBtnDisabled}
-        onClick={() => onPageChange(currentPage - 1)}
+        disabled={isPrevButtonDisabled}
+        onClick={() => handlePageChange(currentPage - 1)}
       >
         ←
       </button>
       <span>{currentPage}</span>
       <button
         className={styles.button}
-        disabled={isNextBtnDisabled}
-        onClick={() => onPageChange(currentPage + 1)}
+        disabled={isNextButtonDisabled}
+        onClick={() => handlePageChange(currentPage + 1)}
       >
         →
       </button>
       <select
         className={styles.select}
         aria-label="items per page select element"
-        value={limit}
-        onChange={handleChange}
+        value={itemsPerPage}
+        onChange={handleItemsPerPageChange}
       >
         <option value="2">2</option>
         <option value="5">5</option>
-        <option value="10">10</option>
+        <option value={defaultItemsPerPage}>{defaultItemsPerPage}</option>
       </select>
     </div>
   );
