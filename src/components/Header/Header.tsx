@@ -1,18 +1,25 @@
-import React from 'react';
 import SearchInput from '../SearchInput/SearchInput';
-import { ISearchInputProps } from '../../models/types';
 import styles from './Header.module.css';
+import { Link } from 'react-router-dom';
 
-const Header: React.FC<ISearchInputProps> = (props) => {
-  const { updateCards, setLoading, setError } = props;
+interface HeaderProps {
+  onClick: (searchTerm: string) => void;
+  searchTerm: string;
+}
+
+const Header = ({ onClick, searchTerm }: HeaderProps) => {
+  const handleButtonClick = () => {
+    onClick('');
+  };
+
   return (
     <header className={styles.header}>
-      <h1 className={styles.title}>Star Wars</h1>
-      <SearchInput
-        updateCards={updateCards}
-        setError={setError}
-        setLoading={setLoading}
-      />
+      <Link to="/">
+        <h1 className={styles.title} onClick={handleButtonClick}>
+          Star Wars
+        </h1>
+      </Link>
+      <SearchInput onClick={onClick} searchTerm={searchTerm} />
     </header>
   );
 };
