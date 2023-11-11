@@ -1,21 +1,15 @@
 import React from 'react';
 import styles from './ErrorButton.module.css';
-import generateError from '../../helpers/generateError';
+import { useState } from 'react';
 
-interface ErrorButtonProps {
-  setError: (error: boolean) => void;
-  setErrorMessage: (errorMessage: string) => void;
-}
-
-const ErrorButton: React.FC<ErrorButtonProps> = ({
-  setError,
-  setErrorMessage,
-}) => {
+const ErrorButton = () => {
+  const [error, setError] = useState(false);
+  const handleClick = () => setError(true);
+  if (error) {
+    throw new Error('Crashed!');
+  }
   return (
-    <button
-      className={styles.errBtn}
-      onClick={() => generateError(setError, setErrorMessage)}
-    >
+    <button className={styles.errBtn} onClick={handleClick}>
       Oops! Error!
     </button>
   );
