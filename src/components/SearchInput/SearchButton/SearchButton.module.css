@@ -1,0 +1,9 @@
+.input_btn {
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 15px 15px;
+  border: 1px solid #000000;
+  background-color: rgba(255, 240, 0, 0.1);
+  color: #000000;
+  cursor: pointer;
+}

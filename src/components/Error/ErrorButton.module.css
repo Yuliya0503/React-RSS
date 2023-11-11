@@ -1,0 +1,16 @@
+.errBtn {
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 15px 15px;
+  border: 1px solid #000000;
+  background-color: #fff000;
+  color: #000000;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.btn_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

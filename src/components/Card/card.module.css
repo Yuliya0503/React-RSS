@@ -1,0 +1,9 @@
+.people_card {
+  width: 300px;
+  height: 250px;
+  background-color: rgba(255, 240, 0, 0.7);
+  background: transparent;
+  border: 1px solid #fff000;
+  overflow-y: auto;
+  margin: 10px;
+}
