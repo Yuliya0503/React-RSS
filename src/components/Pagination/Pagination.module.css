@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+
+  width: 100%;
+  max-width: fit-content;
+}
+
+.button,
+.select {
+  user-select: none;
+  aspect-ratio: 1;
+}
+
+.button:not(:disabled),
+.select:not(:disabled) {
+  cursor: pointer;
+}
