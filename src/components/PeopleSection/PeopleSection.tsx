@@ -4,6 +4,7 @@ import Card from '../Card/Card';
 import { Outlet } from 'react-router-dom';
 import NoResultSection from '../NoResultSection/NoResultSection';
 import Loading from '../Loading/Loading';
+import styles from './PeopleSection.module.css';
 
 interface Props {
   isLoading: boolean;
@@ -18,16 +19,16 @@ const PeopleSection = ({ isLoading, data, limit, children }: Props) => {
   data.length = limit;
 
   return (
-    <section>
-      {children}
-      <div>
-        <ul>
+    <section className={styles.section_wrapper}>
+      <div className={styles.people_wrapper}>
+        <ul className={styles.card_wrapper}>
           {data.map((card: IPeople) => (
             <Card key={card.url} person={card} />
           ))}
         </ul>
         <Outlet />
       </div>
+      {children}
     </section>
   );
 };

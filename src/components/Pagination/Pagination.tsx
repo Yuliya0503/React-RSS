@@ -41,7 +41,7 @@ export const Pagination = ({
       >
         ←
       </button>
-      <span>{currentPage}</span>
+      <span className={styles.currentPage}>{currentPage}</span>
       <button
         className={styles.button}
         disabled={isNextButtonDisabled}

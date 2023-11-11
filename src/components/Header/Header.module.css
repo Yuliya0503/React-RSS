@@ -21,3 +21,7 @@
   text-shadow: rgba(0, 0, 0, 0.5);
   text-align: center;
 }
+
+.title_wrapper {
+  text-decoration: none;
+}

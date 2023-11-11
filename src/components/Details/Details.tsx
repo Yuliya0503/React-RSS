@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { usePerson } from '../../hooks/usePerson';
 import Loading from '../Loading/Loading';
 import ErrorSection from '../Error/ErrorSection';
+import styles from './Details.module.css';
 
 const Details = (): JSX.Element | null => {
   const { id } = useParams() as { id: string };
@@ -19,18 +20,19 @@ const Details = (): JSX.Element | null => {
   if (!person) return null;
 
   return (
-    <div>
-      <h2>Person Details - {person.name}</h2>
-      <p>Name: {person.name}</p>
-      <p>Gender: {person.gender}</p>
-      <p>Height: {person.height}</p>
-      <p>Skin color: {person.skin_color}</p>
-      <p>Hair color: {person.hair_color}</p>
-      <p>Eye color: {person.eye_color}</p>
-      <div>
-        <button onClick={handleClick}>Close</button>
+    <div className={styles.wrapper}>
+      <h2 className={styles.title}>{person.name}</h2>
+      <p className={styles.text}>Gender: {person.gender}</p>
+      <p className={styles.text}>Height: {person.height}</p>
+      <p className={styles.text}>Skin color: {person.skin_color}</p>
+      <p className={styles.text}>Hair color: {person.hair_color}</p>
+      <p className={styles.text}>Eye color: {person.eye_color}</p>
+      <div className={styles.button_wrapper}>
+        <button className={styles.button} onClick={handleClick}>
+          Close
+        </button>
       </div>
-      <button onClick={handleClick}></button>
+      <button className={styles.over} onClick={handleClick}></button>
     </div>
   );
 };

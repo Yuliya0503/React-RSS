@@ -14,7 +14,7 @@ const Header = ({ onClick, searchTerm }: HeaderProps) => {
 
   return (
     <header className={styles.header}>
-      <Link to="/">
+      <Link to="/" className={styles.title_wrapper}>
         <h1 className={styles.title} onClick={handleButtonClick}>
           Star Wars
         </h1>

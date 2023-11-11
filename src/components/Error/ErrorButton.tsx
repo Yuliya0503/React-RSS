@@ -9,9 +9,11 @@ const ErrorButton = () => {
     throw new Error('Crashed!');
   }
   return (
-    <button className={styles.errBtn} onClick={handleClick}>
-      Oops! Error!
-    </button>
+    <div className={styles.btn_wrapper}>
+      <button className={styles.errBtn} onClick={handleClick}>
+        Oops! Error!
+      </button>
+    </div>
   );
 };
 

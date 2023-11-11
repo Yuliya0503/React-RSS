@@ -1,0 +1,15 @@
+.card_wrapper {
+  display: flex;
+  flex-wrap: wrap; 
+  padding: 0;
+}
+
+.people_wrapper {
+  display: flex;
+}
+
+.section_wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
