@@ -5,24 +5,25 @@ import { Outlet } from 'react-router-dom';
 import NoResultSection from '../NoResultSection/NoResultSection';
 import Loading from '../Loading/Loading';
 import styles from './PeopleSection.module.css';
+import { usePeopleContext } from '../../hooks/usePeopleContext';
 
-interface Props {
+interface PeopleSectionProps {
   isLoading: boolean;
-  data: IPeople[];
   children: React.ReactNode;
   limit: number;
 }
 
-const PeopleSection = ({ isLoading, data, limit, children }: Props) => {
+const PeopleSection = ({ isLoading, limit, children }: PeopleSectionProps) => {
+  const data = usePeopleContext();
   if (isLoading) return <Loading />;
   if (!data.length) return <NoResultSection />;
-  data.length = limit;
+  const limitedData = data.slice(0, limit);
 
   return (
     <section className={styles.section_wrapper}>
       <div className={styles.people_wrapper}>
         <ul className={styles.card_wrapper}>
-          {data.map((card: IPeople) => (
+          {limitedData.map((card: IPeople) => (
             <Card key={card.url} person={card} />
           ))}
         </ul>

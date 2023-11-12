@@ -11,6 +11,7 @@ import {
 } from '../../models/constants';
 import { useSearch } from '../../hooks/useSearch';
 import { useSearchDispatch } from '../../hooks/useSearchDispatch';
+import { PeopleContext } from '../../Context/PeopleContext';
 
 interface SearchPageProps {}
 
@@ -50,15 +51,17 @@ const SearchPage: React.FC<SearchPageProps> = () => {
   return (
     <main>
       <Header onClick={handleSearchClick} searchTerm={searchTerm} />
-      <PeopleSection isLoading={isLoading} data={data} limit={limit}>
-        <Pagination
-          currentPage={currentPage}
-          totalItems={totalResults}
-          itemsPerPage={limit}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleLimitChange}
-        />
-      </PeopleSection>
+      <PeopleContext.Provider value={data}>
+        <PeopleSection isLoading={isLoading} limit={limit}>
+          <Pagination
+            currentPage={currentPage}
+            totalItems={totalResults}
+            itemsPerPage={limit}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleLimitChange}
+          />
+        </PeopleSection>
+      </PeopleContext.Provider>
     </main>
   );
 };
