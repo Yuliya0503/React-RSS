@@ -17,10 +17,6 @@ export interface IPeople {
   vehicles: string[];
 }
 
-export interface IPlanet {
-  name: string;
-}
-
 export interface IResponse {
   count: number;
   next: string | string;
