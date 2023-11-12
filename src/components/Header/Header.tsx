@@ -7,7 +7,7 @@ interface HeaderProps {
   searchTerm: string;
 }
 
-const Header = ({ onClick, searchTerm }: HeaderProps) => {
+const Header = ({ onClick }: HeaderProps) => {
   const handleButtonClick = () => {
     onClick('');
   };
@@ -19,7 +19,7 @@ const Header = ({ onClick, searchTerm }: HeaderProps) => {
           Star Wars
         </h1>
       </Link>
-      <SearchInput onClick={onClick} searchTerm={searchTerm} />
+      <SearchInput onClick={onClick} />
     </header>
   );
 };
