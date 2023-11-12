@@ -4,11 +4,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "bundler",
-    "types": [
-      "@testing-library/jest-dom", 
-      "vitest", 
-      "jest"
-    ],
+    "types": ["@testing-library/jest-dom", "vitest", "jest"],
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "esModuleInterop": true,
