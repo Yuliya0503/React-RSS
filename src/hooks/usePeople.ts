@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { getPeople } from '../API/CardService';
-import { IPeople } from '../models/ISWAPI';
+import { usePeopleDispatch } from './usePeopleDispatch';
 
 export function usePeope(
   searchTerm: string,
@@ -8,7 +8,7 @@ export function usePeope(
   limit: number
 ) {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<IPeople[]>([]);
+  const setPeople = usePeopleDispatch();
 
   const totalResults = useRef<number>(0);
 
@@ -26,7 +26,7 @@ export function usePeope(
           { signal }
         );
 
-        setData(results);
+        setPeople(results);
         totalResults.current = count;
         setIsLoading(false);
       } catch (error) {
@@ -38,7 +38,7 @@ export function usePeope(
     fetch();
 
     return () => abortController.abort();
-  }, [searchTerm, currentPage, limit]);
+  }, [searchTerm, currentPage, limit, setPeople]);
 
-  return [data, isLoading, totalResults.current] as const;
+  return [isLoading, totalResults.current] as const;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Pagination } from '../Pagination/Pagination';
 import PeopleSection from '../PeopleSection/PeopleSection';
@@ -12,6 +12,7 @@ import {
 import { useSearch } from '../../hooks/useSearch';
 import { useSearchDispatch } from '../../hooks/useSearchDispatch';
 import { PeopleContext } from '../../Context/PeopleContext';
+import { SearchContext } from '../../Context/SearchContext';
 
 interface SearchPageProps {}
 
@@ -20,11 +21,7 @@ const SearchPage: React.FC<SearchPageProps> = () => {
   const setSearchTerm = useSearchDispatch();
   const [currentPage, setCurrentPage] = useState<number>(DEFAULT_PAGE);
   const [limit, setLimit] = useState<number>(DEFAULT_LIMIT);
-  const [data, isLoading, totalResults] = usePeope(
-    searchTerm,
-    currentPage,
-    limit
-  );
+  const [isLoading, totalResults] = usePeope(searchTerm, currentPage, limit);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSearchClick = (search: string) => {
@@ -36,6 +33,10 @@ const SearchPage: React.FC<SearchPageProps> = () => {
     setLimit(newLimit);
     initFirstPage();
   };
+  const searchQuery = useContext(SearchContext);
+  const PeopleQuery = useContext(PeopleContext);
+  console.log('Search Query from Context:', searchQuery);
+  console.log('People Query from Context:', PeopleQuery);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -51,17 +52,15 @@ const SearchPage: React.FC<SearchPageProps> = () => {
   return (
     <main>
       <Header onClick={handleSearchClick} searchTerm={searchTerm} />
-      <PeopleContext.Provider value={data}>
-        <PeopleSection isLoading={isLoading} limit={limit}>
-          <Pagination
-            currentPage={currentPage}
-            totalItems={totalResults}
-            itemsPerPage={limit}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handleLimitChange}
-          />
-        </PeopleSection>
-      </PeopleContext.Provider>
+      <PeopleSection isLoading={isLoading} limit={limit}>
+        <Pagination
+          currentPage={currentPage}
+          totalItems={totalResults}
+          itemsPerPage={limit}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleLimitChange}
+        />
+      </PeopleSection>
     </main>
   );
 };

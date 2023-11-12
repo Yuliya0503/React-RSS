@@ -17,13 +17,13 @@ const PeopleSection = ({ isLoading, limit, children }: PeopleSectionProps) => {
   const data = usePeopleContext();
   if (isLoading) return <Loading />;
   if (!data.length) return <NoResultSection />;
-  const limitedData = data.slice(0, limit);
+  data.length = limit;
 
   return (
     <section className={styles.section_wrapper}>
       <div className={styles.people_wrapper}>
         <ul className={styles.card_wrapper}>
-          {limitedData.map((card: IPeople) => (
+          {data.map((card: IPeople) => (
             <Card key={card.url} person={card} />
           ))}
         </ul>

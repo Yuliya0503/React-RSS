@@ -11,9 +11,9 @@ interface SearchProviderProps {
 }
 
 export const SearchContext = createContext<string>('');
-export const SearchDispatchContext = createContext<
-  Dispatch<SetStateAction<string>>
->(() => {});
+export const SearchDispatchContext = createContext<Dispatch<
+  SetStateAction<string>
+> | null>(null);
 
 const searchTerm = localStorage.getItem('searchTerm');
 
