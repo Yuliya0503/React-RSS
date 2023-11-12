@@ -9,8 +9,8 @@ export interface IPeople {
   mass: string;
   name: string;
   skin_color: string;
-  created: Date;
-  edited: Date;
+  created: string;
+  edited: string;
   species: string[];
   starships: string[];
   url: string;
