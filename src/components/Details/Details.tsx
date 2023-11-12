@@ -1,8 +1,8 @@
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { usePerson } from '../../hooks/usePerson';
 import Loading from '../Loading/Loading';
-import ErrorSection from '../Error/ErrorSection';
 import styles from './Details.module.css';
+import NotFound from '../NotFound/NotFound';
 
 const Details = (): JSX.Element | null => {
   const { id } = useParams() as { id: string };
@@ -16,7 +16,7 @@ const Details = (): JSX.Element | null => {
 
   if (isLoading) return <Loading />;
 
-  if (error) return <ErrorSection />;
+  if (error) return <NotFound />;
 
   if (!person) return null;
 
