@@ -1,0 +1,47 @@
+.wrapper {
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 300px;
+  background-color: rgb(55, 55, 53);
+}
+
+.title {
+  align-items: center;
+  color: #fff000;
+}
+
+.text {
+  margin: 0;
+}
+
+.button_wrapper {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: 20px;
+  align-items: center;
+}
+
+.over {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 320px;
+  background-color: rgba(16, 16, 15, 0.2);
+  opacity: 0.3;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.button {
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 15px 15px;
+  border: 1px solid #000000;
+  background-color: #fff000;
+  color: #000000;
+  cursor: pointer;
+}
