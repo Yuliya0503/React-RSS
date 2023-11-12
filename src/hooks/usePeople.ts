@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { getPeople } from '../API/CardService';
 import { usePeopleDispatch } from './usePeopleDispatch';
+import { searchTermLS } from '../models/constants';
 
 export function usePeope(
   searchTerm: string,
@@ -17,7 +18,7 @@ export function usePeope(
     const { signal } = abortController;
     const fetch = async () => {
       setIsLoading(true);
-      localStorage.setItem('searchTerm', searchTerm);
+      localStorage.setItem(searchTermLS, searchTerm);
       try {
         const { results, count } = await getPeople(
           currentPage,

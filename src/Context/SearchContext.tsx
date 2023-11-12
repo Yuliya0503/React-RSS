@@ -5,6 +5,7 @@ import {
   SetStateAction,
   useState,
 } from 'react';
+import { searchTermLS } from '../models/constants';
 
 interface SearchProviderProps {
   children: ReactNode;
@@ -15,7 +16,7 @@ export const SearchDispatchContext = createContext<Dispatch<
   SetStateAction<string>
 > | null>(null);
 
-const searchTerm = localStorage.getItem('searchTerm');
+const searchTerm = localStorage.getItem(searchTermLS);
 
 export default function SearchProvider({ children }: SearchProviderProps) {
   const [searchQuery, setSearchQuery] = useState(searchTerm || '');

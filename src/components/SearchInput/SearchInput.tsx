@@ -1,27 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SearchInput.module.css';
 import SearchField from './SearchField/SearchField';
 import SearchButton from './SearchButton/SearchButton';
+import { useSearch } from '../../hooks/useSearch';
 
 interface SearchInputProps {
   onClick: (searchTerm: string) => void;
-  searchTerm: string;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ onClick, searchTerm }) => {
-  const [inputValue, setInputValue] = useState(searchTerm);
-
-  const handleInputChange = (value: string) => {
-    setInputValue(value);
-  };
+const SearchInput: React.FC<SearchInputProps> = ({ onClick }) => {
+  const searchTerm = useSearch();
+  const [inputValue, setInputValue] = useState<string>(searchTerm);
 
   const handleSearchClick = () => {
-    onClick(inputValue.trim());
+    const value = inputValue.trim();
+    onClick(value);
   };
+
+  useEffect(() => {
+    setInputValue(searchTerm);
+  }, [searchTerm]);
 
   return (
     <div className={styles.form}>
-      <SearchField value={inputValue} onChange={handleInputChange} />
+      <SearchField
+        value={inputValue}
+        onChange={(value) => setInputValue(value)}
+      />
       <SearchButton onClick={handleSearchClick} />
     </div>
   );

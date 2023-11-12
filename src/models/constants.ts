@@ -4,3 +4,5 @@ export const NoResultMessage = 'No result found.';
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_LIMIT = 10;
 export const SEARCH_PARAM_PAGE = 'page';
+
+export const searchTermLS: string = 'searchTerm';
