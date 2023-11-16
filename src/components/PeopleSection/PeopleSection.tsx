@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { IPeople } from '../../models/ISWAPI';
 import Card from '../Card/Card';
 import { Outlet } from 'react-router-dom';
@@ -6,6 +7,8 @@ import NoResultSection from '../NoResultSection/NoResultSection';
 import Loading from '../Loading/Loading';
 import styles from './PeopleSection.module.css';
 import { usePeopleContext } from '../../hooks/usePeopleContext';
+import { setPeopleList } from '../../Store/Reducers/PeopleListReduser';
+import { RootState } from '../../Store/RootReduser';
 
 interface PeopleSectionProps {
   isLoading: boolean;
@@ -14,16 +17,25 @@ interface PeopleSectionProps {
 }
 
 const PeopleSection = ({ isLoading, limit, children }: PeopleSectionProps) => {
+  const dispatch = useDispatch();
+  const peopleList = useSelector(
+    (state: RootState) => state.peopleListSlice.peopleList
+  );
   const data = usePeopleContext();
+
+  useEffect(() => {
+    dispatch(setPeopleList(data));
+  }, [data, dispatch]);
+
   if (isLoading) return <Loading />;
-  if (!data.length) return <NoResultSection />;
-  data.length = limit;
+  if (!peopleList.length) return <NoResultSection />;
+  const limitedData = peopleList.slice(0, limit);
 
   return (
     <section className={styles.section_wrapper}>
       <div className={styles.people_wrapper}>
         <ul className={styles.card_wrapper}>
-          {data.map((card: IPeople) => (
+          {limitedData.map((card: IPeople) => (
             <Card key={card.url} person={card} />
           ))}
         </ul>
