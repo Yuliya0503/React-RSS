@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { IPeople } from '../../models/ISWAPI';
 import Card from '../Card/Card';
 import { Outlet } from 'react-router-dom';
@@ -9,6 +8,7 @@ import styles from './PeopleSection.module.css';
 import { usePeopleContext } from '../../hooks/usePeopleContext';
 import { setPeopleList } from '../../Store/Reducers/PeopleListReduser';
 import { RootState } from '../../Store/RootReduser';
+import { useAppSelector, useAppDispatch } from '../../hooks/reduxHoooks';
 
 interface PeopleSectionProps {
   isLoading: boolean;
@@ -17,8 +17,8 @@ interface PeopleSectionProps {
 }
 
 const PeopleSection = ({ isLoading, limit, children }: PeopleSectionProps) => {
-  const dispatch = useDispatch();
-  const peopleList = useSelector(
+  const dispatch = useAppDispatch();
+  const peopleList = useAppSelector(
     (state: RootState) => state.peopleListSlice.peopleList
   );
   const data = usePeopleContext();

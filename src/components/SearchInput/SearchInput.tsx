@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styles from './SearchInput.module.css';
 import SearchField from './SearchField/SearchField';
 import SearchButton from './SearchButton/SearchButton';
 import { setRootSearch } from '../../Store/Reducers/SearchReduser';
-import { RootState } from '../../Store/RootReduser';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHoooks';
 
 interface SearchInputProps {
   onClick: (searchTerm: string) => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({ onClick }) => {
-  const dispatch = useDispatch();
-  const searchRootString = useSelector(
-    (state: RootState) => state.searchSlice.searchRootString
+  const dispatch = useAppDispatch();
+  const searchRootString = useAppSelector(
+    (state) => state.searchSlice.searchRootString
   );
   const [inputValue, setInputValue] = useState<string>(searchRootString);
 
