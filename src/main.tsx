@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import './index.css';
 import { AppRouter } from './Router/router';
-import { store } from './Store/Store';
+import store from './Store/Store';
 import React from 'react';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
