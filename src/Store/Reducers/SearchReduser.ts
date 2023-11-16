@@ -11,7 +11,7 @@ const initialState: ISearchString = {
   searchRootString: storedSearchTerm,
 };
 
-export const searchSlice = createSlice({
+const searchSlice = createSlice({
   name: 'Search',
   initialState,
   reducers: {
@@ -21,4 +21,5 @@ export const searchSlice = createSlice({
   },
 });
 
+export const { setRootSearch } = searchSlice.actions;
 export default searchSlice.reducer;
