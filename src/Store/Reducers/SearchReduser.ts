@@ -1,14 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { searchTermLS } from '../../models/constants';
-
+import { getLocalStorage } from '../../LocalStorage/getlocalStorage';
+import { RootState } from '../RootReduser';
 interface ISearchString {
   searchRootString: string;
 }
 
-const storedSearchTerm: string = localStorage.getItem(searchTermLS) || '';
-
 const initialState: ISearchString = {
-  searchRootString: storedSearchTerm,
+  searchRootString: getLocalStorage(),
 };
 
 const searchSlice = createSlice({
@@ -18,8 +16,13 @@ const searchSlice = createSlice({
     setRootSearch: (state, action: PayloadAction<string>) => {
       state.searchRootString = action.payload;
     },
+    setSearchCleared: (state) => {
+      state.searchRootString = '';
+    },
   },
 });
 
-export const { setRootSearch } = searchSlice.actions;
+export const { setRootSearch, setSearchCleared } = searchSlice.actions;
+export const selectSearch = (state: RootState) =>
+  state.searchSlice.searchRootString;
 export default searchSlice.reducer;
