@@ -1,49 +1,29 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
+import { AppDispatch } from '../../Store/Store';
+import { RootState } from '../../Store/RootReduser';
+import { setRootSearch } from '../../Store/Reducers/SearchReduser';
 import { Pagination } from '../Pagination/Pagination';
 import PeopleSection from '../PeopleSection/PeopleSection';
 import Header from '../Header/Header';
 import { usePeope } from '../../hooks/usePeople';
-import {
-  DEFAULT_PAGE,
-  DEFAULT_LIMIT,
-  SEARCH_PARAM_PAGE,
-} from '../../models/constants';
-import { useSearch } from '../../hooks/useSearch';
-import { useSearchDispatch } from '../../hooks/useSearchDispatch';
-import { PeopleContext } from '../../Context/PeopleContext';
-import { SearchContext } from '../../Context/SearchContext';
+import { DEFAULT_PAGE, SEARCH_PARAM_PAGE } from '../../models/constants';
 
 interface SearchPageProps {}
 
 const SearchPage: React.FC<SearchPageProps> = () => {
-  const searchTerm = useSearch();
-  const setSearchTerm = useSearchDispatch();
+  const searchTerm = useSelector(
+    (state: RootState) => state.searchSlice.searchRootString
+  );
+  const limit = useSelector((state: RootState) => state.pageSlice.limit);
+  const dispatch = useDispatch<AppDispatch>();
   const [currentPage, setCurrentPage] = useState<number>(DEFAULT_PAGE);
-  const [limit, setLimit] = useState<number>(DEFAULT_LIMIT);
   const [isLoading, totalResults] = usePeope(searchTerm, currentPage, limit);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSearchClick = (search: string) => {
-    setSearchTerm(search);
-    initFirstPage();
-  };
-
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    initFirstPage();
-  };
-  const searchQuery = useContext(SearchContext);
-  const PeopleQuery = useContext(PeopleContext);
-  console.log('Search Query from Context:', searchQuery);
-  console.log('People Query from Context:', PeopleQuery);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    setSearchParams({ [SEARCH_PARAM_PAGE]: newPage.toString() });
-  };
-
-  const initFirstPage = () => {
+    dispatch(setRootSearch(search));
     setCurrentPage(DEFAULT_PAGE);
     searchParams.delete(SEARCH_PARAM_PAGE);
     setSearchParams(searchParams);
@@ -52,13 +32,11 @@ const SearchPage: React.FC<SearchPageProps> = () => {
   return (
     <main>
       <Header onClick={handleSearchClick} searchTerm={searchTerm} />
-      <PeopleSection isLoading={isLoading} limit={limit}>
+      <PeopleSection isLoading={isLoading}>
         <Pagination
           currentPage={currentPage}
           totalItems={totalResults}
-          itemsPerPage={limit}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleLimitChange}
+          setPage={setCurrentPage}
         />
       </PeopleSection>
     </main>

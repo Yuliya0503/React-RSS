@@ -1,35 +1,45 @@
 import styles from './Pagination.module.css';
-import React from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
+import { AppDispatch } from '../../Store/Store';
+import { RootState } from '../../Store/RootReduser';
+import { setPageItems } from '../../Store/Reducers/PageSliceReduser';
+import {
+  DEFAULT_LIMIT,
+  DEFAULT_PAGE,
+  SEARCH_PARAM_PAGE,
+} from '../../models/constants';
 
 interface PaginationProps {
   currentPage: number;
   totalItems: number;
-  itemsPerPage: number;
-  onPageChange: (page: number) => void;
-  onItemsPerPageChange: (itemsPerPage: number) => void;
+  setPage: Dispatch<SetStateAction<number>>;
 }
-
-const defaultItemsPerPage = 10;
 
 export const Pagination = ({
   currentPage,
   totalItems,
-  itemsPerPage,
-  onPageChange,
-  onItemsPerPageChange,
+  setPage,
 }: PaginationProps) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const limit = useSelector((state: RootState) => state.pageSlice.limit);
+  const dispatch = useDispatch<AppDispatch>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const totalPages = Math.ceil(totalItems / DEFAULT_LIMIT);
   const isPrevButtonDisabled = currentPage <= 1;
   const isNextButtonDisabled = currentPage >= totalPages;
 
   const handlePageChange = (newPage: number) => {
-    onPageChange(newPage);
+    setPage(newPage);
+    setSearchParams({ [SEARCH_PARAM_PAGE]: String(newPage) });
   };
 
-  const handleItemsPerPageChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    onItemsPerPageChange(+e.target.value);
+  const handleItemsPerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    dispatch(setPageItems(+value));
+    setPage(DEFAULT_PAGE);
+    searchParams.delete(SEARCH_PARAM_PAGE);
+    setSearchParams(searchParams);
   };
 
   return (
@@ -51,13 +61,12 @@ export const Pagination = ({
       </button>
       <select
         className={styles.select}
-        aria-label="items per page select element"
-        value={itemsPerPage}
+        value={limit}
         onChange={handleItemsPerPageChange}
       >
         <option value="2">2</option>
         <option value="5">5</option>
-        <option value={defaultItemsPerPage}>{defaultItemsPerPage}</option>
+        <option value={DEFAULT_LIMIT}>{DEFAULT_LIMIT}</option>
       </select>
     </div>
   );
