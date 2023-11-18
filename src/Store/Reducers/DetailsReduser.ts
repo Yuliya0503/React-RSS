@@ -19,5 +19,4 @@ const DetailSlice = createSlice({
 });
 
 export const { setView } = DetailSlice.actions;
-
 export default DetailSlice.reducer;
