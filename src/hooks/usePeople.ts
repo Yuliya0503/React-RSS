@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { getPeople } from '../API/CardService';
 import { usePeopleDispatch } from './usePeopleDispatch';
-import { searchTermLS } from '../models/constants';
+import { setLocalStorage } from '../LocalStorage/setLocalStorage';
 
 export function usePeope(
   searchTerm: string,
@@ -16,16 +16,13 @@ export function usePeope(
   useEffect(() => {
     const abortController = new AbortController();
     const { signal } = abortController;
-    const fetch = async () => {
+    const fetch = async (search: string, page: number) => {
       setIsLoading(true);
-      localStorage.setItem(searchTermLS, searchTerm);
+      setLocalStorage(search);
       try {
-        const { results, count } = await getPeople(
-          currentPage,
-          searchTerm,
-          limit,
-          { signal }
-        );
+        const { results, count } = await getPeople(page, search, limit, {
+          signal,
+        });
 
         setPeople(results);
         totalResults.current = count;
@@ -36,7 +33,7 @@ export function usePeope(
         }
       }
     };
-    fetch();
+    fetch(searchTerm, currentPage);
 
     return () => abortController.abort();
   }, [searchTerm, currentPage, limit, setPeople]);
