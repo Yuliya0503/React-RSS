@@ -7,6 +7,7 @@ import Loading from '../Loading/Loading';
 import styles from './PeopleSection.module.css';
 import { usePeopleContext } from '../../hooks/usePeopleContext';
 import { useAppSelector } from '../../hooks/reduxHoooks';
+import { selectPageItems } from '../../Store/Reducers/PageSliceReduser';
 
 interface PeopleSectionProps {
   isLoading: boolean;
@@ -14,7 +15,7 @@ interface PeopleSectionProps {
 }
 
 const PeopleSection = ({ isLoading, children }: PeopleSectionProps) => {
-  const limit = useAppSelector((state) => state.pageSlice.limit);
+  const limit = useAppSelector(selectPageItems);
   const data = usePeopleContext();
 
   if (isLoading) return <Loading />;

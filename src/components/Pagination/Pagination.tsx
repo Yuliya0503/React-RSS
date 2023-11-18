@@ -1,7 +1,10 @@
 import styles from './Pagination.module.css';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { setPageItems } from '../../Store/Reducers/PageSliceReduser';
+import {
+  selectPageItems,
+  setPageItems,
+} from '../../Store/Reducers/PageSliceReduser';
 import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
@@ -20,7 +23,7 @@ export const Pagination = ({
   totalItems,
   setPage,
 }: PaginationProps) => {
-  const limit = useAppSelector((state) => state.pageSlice.limit);
+  const limit = useAppSelector(selectPageItems);
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const totalPages = Math.ceil(totalItems / DEFAULT_LIMIT);

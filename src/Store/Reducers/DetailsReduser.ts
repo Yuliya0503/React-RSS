@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../RootReduser';
 
 interface IDetailsState {
   mode: boolean;
@@ -19,4 +20,5 @@ const DetailSlice = createSlice({
 });
 
 export const { setView } = DetailSlice.actions;
+export const selectDetails = (state: RootState) => state.detailsSlice.mode;
 export default DetailSlice.reducer;

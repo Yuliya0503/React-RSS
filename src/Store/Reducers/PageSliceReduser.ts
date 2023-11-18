@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../RootReduser';
 
 interface IPageItems {
   limit: number;
@@ -19,4 +20,5 @@ const PageItemsSlice = createSlice({
 });
 
 export const { setPageItems } = PageItemsSlice.actions;
+export const selectPageItems = (state: RootState) => state.pageSlice.limit;
 export default PageItemsSlice.reducer;

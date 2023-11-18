@@ -2,7 +2,10 @@ import React, { Dispatch, SetStateAction, useRef } from 'react';
 import styles from './SearchInput.module.css';
 import SearchField from './SearchField/SearchField';
 import SearchButton from './SearchButton/SearchButton';
-import { setRootSearch } from '../../Store/Reducers/SearchReduser';
+import {
+  selectSearch,
+  setRootSearch,
+} from '../../Store/Reducers/SearchReduser';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHoooks';
 import { DEFAULT_PAGE, SEARCH_PARAM_PAGE } from '../../models/constants';
 import { useSearchParams } from 'react-router-dom';
@@ -15,9 +18,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ setPage }) => {
   const textInput = useRef<HTMLInputElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
-  const searchRootString = useAppSelector(
-    (state) => state.searchSlice.searchRootString
-  );
+  const searchRootString = useAppSelector(selectSearch);
 
   const handleSearchChange = (value: string) => {
     dispatch(setRootSearch(value));
