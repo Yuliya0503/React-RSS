@@ -1,15 +1,15 @@
+import { DEFAULT_PAGE } from '../../models/constants';
 import SearchInput from '../SearchInput/SearchInput';
 import styles from './Header.module.css';
 import { Link } from 'react-router-dom';
 
 interface HeaderProps {
-  onClick: (searchTerm: string) => void;
-  searchTerm: string;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Header = ({ onClick }: HeaderProps) => {
+const Header: React.FC<HeaderProps> = ({ setPage }) => {
   const handleButtonClick = () => {
-    onClick('');
+    setPage(DEFAULT_PAGE);
   };
 
   return (
@@ -19,7 +19,7 @@ const Header = ({ onClick }: HeaderProps) => {
           Star Wars
         </h1>
       </Link>
-      <SearchInput onClick={onClick} />
+      <SearchInput setPage={setPage} />
     </header>
   );
 };

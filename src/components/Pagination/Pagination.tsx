@@ -1,15 +1,13 @@
 import styles from './Pagination.module.css';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { AppDispatch } from '../../Store/Store';
-import { RootState } from '../../Store/RootReduser';
 import { setPageItems } from '../../Store/Reducers/PageSliceReduser';
 import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
   SEARCH_PARAM_PAGE,
 } from '../../models/constants';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHoooks';
 
 interface PaginationProps {
   currentPage: number;
@@ -22,8 +20,8 @@ export const Pagination = ({
   totalItems,
   setPage,
 }: PaginationProps) => {
-  const limit = useSelector((state: RootState) => state.pageSlice.limit);
-  const dispatch = useDispatch<AppDispatch>();
+  const limit = useAppSelector((state) => state.pageSlice.limit);
+  const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const totalPages = Math.ceil(totalItems / DEFAULT_LIMIT);
   const isPrevButtonDisabled = currentPage <= 1;

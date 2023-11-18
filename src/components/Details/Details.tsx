@@ -3,16 +3,15 @@ import { usePerson } from '../../hooks/usePerson';
 import Loading from '../Loading/Loading';
 import styles from './Details.module.css';
 import NotFound from '../NotFound/NotFound';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../Store/Store';
 import { setView } from '../../Store/Reducers/DetailsReduser';
+import { useAppDispatch } from '../../hooks/reduxHoooks';
 
 const Details = (): JSX.Element | null => {
   const { id } = useParams() as { id: string };
   const [person, error, isLoading] = usePerson(+id);
   const navigate = useNavigate();
   const { search } = useLocation();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   dispatch(setView(true));
 
   const handleClick = (): void => {
