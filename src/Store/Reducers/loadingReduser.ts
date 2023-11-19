@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../RootReduser';
+import { RootState } from '../RootReducer';
 
 interface ILoadingState {
   loading: {
@@ -19,13 +19,10 @@ const loadSlice = createSlice({
   name: 'loading',
   initialState,
   reducers: {
-    loadingdetails: (state: ILoadingState, action: PayloadAction<boolean>) => {
+    loadingdetails(state, action: PayloadAction<boolean>) {
       state.loading.details = action.payload;
     },
-    loadingSearchPage: (
-      state: ILoadingState,
-      action: PayloadAction<boolean>
-    ) => {
+    loadingSearchPage(state, action: PayloadAction<boolean>) {
       state.loading.searchPage = action.payload;
     },
   },

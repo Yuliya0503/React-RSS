@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../RootReduser';
+import { RootState } from '../RootReducer';
 
 interface IDetailsState {
   mode: boolean;
@@ -13,7 +13,7 @@ const DetailSlice = createSlice({
   name: 'details',
   initialState,
   reducers: {
-    setView: (state: IDetailsState, action: PayloadAction<boolean>) => {
+    setView(state, action: PayloadAction<boolean>) {
       state.mode = action.payload;
     },
   },
