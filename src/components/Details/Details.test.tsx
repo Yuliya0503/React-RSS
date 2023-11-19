@@ -1,6 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { render, screen, act } from '@testing-library/react';
 import user from '@testing-library/user-event';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from '../../Store/Store';
 import { createServer } from '../../tests/mocks/server';
 import { peopleMock } from '../../tests/data/peopleMock';
 import Details from './Details';
@@ -10,15 +12,21 @@ const server = createServer();
 beforeAll(() => server.listen());
 afterAll(() => server.close());
 
-describe('Details component', () => {
-  test('displays detailed card data correctly', async () => {
-    render(
-      <MemoryRouter initialEntries={['/1']}>
+const renderDetailsWithRouter = (path: string) => {
+  return render(
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[path]}>
         <Routes>
           <Route path=":id" element={<Details />} />
         </Routes>
       </MemoryRouter>
-    );
+    </Provider>
+  );
+};
+
+describe('Details Component', () => {
+  test('displays detailed card data correctly', async () => {
+    renderDetailsWithRouter('/1');
 
     const closeButton = await screen.findByRole('button', { name: 'Close' });
     const { gender, height, skin_color, hair_color, eye_color } = peopleMock[0];
@@ -32,18 +40,13 @@ describe('Details component', () => {
   });
 
   test('hides the component when clicking the close button', async () => {
-    user.setup();
-
-    render(
-      <MemoryRouter initialEntries={['/1']}>
-        <Routes>
-          <Route path=":id" element={<Details />} />
-        </Routes>
-      </MemoryRouter>
-    );
+    renderDetailsWithRouter('/1');
 
     const closeButton = await screen.findByRole('button', { name: 'Close' });
-    await user.click(closeButton);
+
+    await act(async () => {
+      await user.click(closeButton);
+    });
 
     expect(
       screen.queryByRole('button', { name: 'Close' })
@@ -51,13 +54,7 @@ describe('Details component', () => {
   });
 
   test('displays loading indicator while fetching data', async () => {
-    render(
-      <MemoryRouter initialEntries={['/100']}>
-        <Routes>
-          <Route path=":id" element={<Details />} />
-        </Routes>
-      </MemoryRouter>
-    );
+    renderDetailsWithRouter('/100');
 
     const loading = await screen.findByTestId('loading', {}, { timeout: 5000 });
     expect(loading).toBeInTheDocument();

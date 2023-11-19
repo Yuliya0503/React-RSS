@@ -1,31 +1,36 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createServer } from '../../tests/mocks/server';
 import Details from '../Details/Details';
+import { Provider } from 'react-redux';
+import store from '../../Store/Store';
 
 const server = createServer();
 
 beforeAll(() => server.listen());
 afterAll(() => server.close());
 
-describe('NotFound component', () => {
-  test('The 404 page is displayed when navigating to an invalid route', async () => {
+describe('Details Component', () => {
+  test('displays the "No person data" message on the 404 page', async () => {
     render(
-      <MemoryRouter initialEntries={['/invalid-route']}>
-        <Routes>
-          <Route path=":id" element={<Details />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/NaN']}>
+          <Routes>
+            <Route path=":id" element={<Details />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
-    // Ждем, пока компонент завершит загрузку
-    await waitFor(() => screen.getByText(/Loading.../), { timeout: 5000 });
+    await act(async () => {
+      await screen.findByText(/Loading.../);
+    });
 
     const noPersonDataElement = screen.queryByText(/No person data/i);
     expect(noPersonDataElement).toBeInTheDocument();
   });
 
-  it('displays the "No person data" message', () => {
+  test('displays the "No person data" message in a standalone component', () => {
     render(
       <div>
         <p>No person data</p>

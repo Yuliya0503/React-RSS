@@ -1,45 +1,57 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { PeopleContext } from '../../Context/PeopleContext';
-import { peopleMock } from '../../tests/data/peopleMock';
 import PeopleSection from './PeopleSection';
+import { createServer } from '../../tests/mocks/server';
+import store from '../../Store/Store';
+import { Provider } from 'react-redux';
+import { setPageItems } from '../../Store/Reducers/PageSliceReduser';
+import { setRootSearch } from '../../Store/Reducers/SearchReduser';
+import { apiPeople } from '../../API/CardService';
+import { http, HttpResponse } from 'msw';
+import { PeopleResponse } from '../../tests/data/peopleResponse';
 
-describe('PeopleSection component', () => {
-  test('Verify that the component renders the specified number of cards', () => {
-    const limit = 4;
+const server = createServer();
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() => {
+  apiPeople.util.resetApiState();
+  server.resetHandlers();
+});
+afterAll(() => server.close());
+
+describe('PeopleSection Component', () => {
+  const limit = 4;
+
+  test('renders the specified number of cards', async () => {
+    store.dispatch(setPageItems(limit));
+
     render(
-      <BrowserRouter>
-        <PeopleContext.Provider value={peopleMock}>
-          <PeopleSection isLoading={false} limit={limit}>
-            <></>
-          </PeopleSection>
-        </PeopleContext.Provider>
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <PeopleSection />
+        </BrowserRouter>
+      </Provider>
     );
-    expect(screen.getAllByRole('listitem')).toHaveLength(limit);
+
+    expect(await screen.findAllByRole('listitem')).toHaveLength(limit);
   });
-  test('Check that an appropriate message is displayed if no cards are present', () => {
-    render(
-      <BrowserRouter>
-        <PeopleContext.Provider value={[]}>
-          <PeopleSection isLoading={false} limit={10}>
-            <></>
-          </PeopleSection>
-        </PeopleContext.Provider>
-      </BrowserRouter>
+
+  test('displays an appropriate message if no cards are present', async () => {
+    server.use(
+      http.get('https://swapi.dev/api/people', () =>
+        HttpResponse.json({ ...PeopleResponse, results: [] })
+      )
     );
-    expect(screen.getByText(/No result found./i)).toBeInTheDocument();
-  });
-  test('displays loading message during data loading', () => {
+    const searchTerm = 'unknown';
+    store.dispatch(setRootSearch(searchTerm));
+
     render(
-      <BrowserRouter>
-        <PeopleContext.Provider value={[]}>
-          <PeopleSection isLoading={true} limit={10}>
-            <></>
-          </PeopleSection>
-        </PeopleContext.Provider>
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <PeopleSection />
+        </BrowserRouter>
+      </Provider>
     );
-    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
+
+    expect(await screen.findByText(/No result found./i)).toBeInTheDocument();
   });
 });

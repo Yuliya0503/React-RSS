@@ -1,73 +1,67 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import user from '@testing-library/user-event';
-import { vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { PeopleContext } from '../../Context/PeopleContext';
-import { getPerson } from '../../API/CardService';
-import { peopleMock } from '../../tests/data/peopleMock';
+import { Provider } from 'react-redux';
+import store from '../../Store/Store';
 import Details from '../Details/Details';
 import PeopleSection from '../PeopleSection/PeopleSection';
+import { createServer } from '../../tests/mocks/server';
+import { vi } from 'vitest';
 
-vi.mock('../../API/CardService', () => ({
-  getPerson: vi.fn((id) => Promise.resolve(peopleMock[id - 1])),
-}));
+const server = createServer();
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterAll(() => server.close());
+
+beforeEach(() => {
+  user.setup();
+});
 
 afterEach(() => {
   vi.clearAllMocks();
 });
 
 describe('Card component', () => {
-  test('should open a detailed card component when clicking on a card', async () => {
+  test('opens a detailed card component when clicking on a card', async () => {
     render(
-      <MemoryRouter>
-        <PeopleContext.Provider value={peopleMock}>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/']}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <PeopleSection isLoading={false} limit={1}>
-                  <></>
-                </PeopleSection>
-              }
-            >
-              <Route path=":id" element={<Details />} />
-            </Route>
+            <Route path="/" element={<PeopleSection />} />
+            <Route path=":id" element={<Details />} />
           </Routes>
-        </PeopleContext.Provider>
-      </MemoryRouter>
+        </MemoryRouter>
+      </Provider>
     );
 
-    user.click(screen.getByRole('link'));
+    const links = await screen.findAllByRole<HTMLAnchorElement>('link');
 
-    await waitFor(() => {
-      const closeButton = screen.getByRole('button', { name: 'Close' });
-      expect(closeButton).toBeInTheDocument();
+    await act(async () => {
+      await user.click(links[0]);
     });
+
+    const closeButton = await screen.findByRole('button', { name: 'Close' });
+    expect(closeButton).toBeInTheDocument();
   });
 
-  test('should trigger an additional API call to fetch detailed information when clicking on a card', async () => {
+  test('triggers an additional API call to fetch detailed information when clicking on a card', async () => {
     render(
-      <MemoryRouter>
-        <PeopleContext.Provider value={peopleMock}>
+      <Provider store={store}>
+        <MemoryRouter>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <PeopleSection isLoading={false} limit={1}>
-                  <></>
-                </PeopleSection>
-              }
-            >
-              <Route path=":id" element={<Details />} />
-            </Route>
+            <Route path="/" element={<PeopleSection />} />
+            <Route path=":id" element={<Details />} />
           </Routes>
-        </PeopleContext.Provider>
-      </MemoryRouter>
+        </MemoryRouter>
+      </Provider>
     );
 
-    user.click(screen.getByRole('link'));
-    await waitFor(() => {
-      expect(getPerson).toHaveBeenCalled();
+    const links = await screen.findAllByRole<HTMLAnchorElement>('link');
+
+    await act(async () => {
+      await user.click(links[0]);
     });
+
+    expect(server.listHandlers()[0].isUsed).toBeTruthy();
   });
 });

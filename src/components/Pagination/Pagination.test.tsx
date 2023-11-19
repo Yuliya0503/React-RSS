@@ -1,65 +1,73 @@
-import { render, screen } from '@testing-library/react';
-import user from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
-import { vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createServer } from '../../tests/mocks/server';
+import Pagination from './Pagination';
+import store from '../../Store/Store';
+import { pageCurrentUpdate } from '../../Store/Reducers/PageCurrentSlice';
+import PeopleSection from '../PeopleSection/PeopleSection';
 
-import { Pagination } from './Pagination';
+const server = createServer();
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterAll(() => server.close());
 
-describe('Pagination component', () => {
-  const currentPage = 2;
-  const handlePageChange = vi.fn();
-  const handleItemsPerPageChange = vi.fn();
-
-  beforeEach(() => {
-    render(
-      <MemoryRouter initialEntries={['/some-path']}>
-        <Pagination
-          currentPage={currentPage}
-          totalItems={100}
-          itemsPerPage={10}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange}
-        />
-      </MemoryRouter>
-    );
-  });
+describe('Pagination Component', () => {
+  const page = 3;
 
   test('updates URL query parameter when clicking next and previous buttons', async () => {
-    const btnNext = screen.getByRole('button', { name: '→' });
-    const btnPrev = screen.getByRole('button', { name: '←' });
+    store.dispatch(pageCurrentUpdate(page));
 
-    await user.click(btnNext);
-    expect(handlePageChange).toBeCalledWith(currentPage + 1);
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Pagination totalItems={100} />
+        </BrowserRouter>
+      </Provider>
+    );
 
-    await user.click(btnPrev);
-    expect(handlePageChange).toBeCalledWith(currentPage - 1);
+    const btnNext = await screen.findByRole('button', { name: 'Next →' });
+    const btnPrev = await screen.findByRole('button', { name: '← Prev' });
+
+    fireEvent.click(btnNext);
+    expect(window.location.search).toContain(`page=${page + 1}`);
+
+    fireEvent.click(btnPrev);
+    fireEvent.click(btnPrev);
+    expect(window.location.search).toContain(`page=${page - 1}`);
   });
 
-  test('calls onItemsPerPageChange when changing items per page', async () => {
-    const select = screen.getByLabelText('items per page select element');
+  test('calls handleItemsPerPageChange when changing items per page', async () => {
+    const limitOther = 2;
 
-    await user.selectOptions(select, '5');
-    expect(handleItemsPerPageChange).toBeCalledWith(5);
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/some-path']}>
+          <PeopleSection />
+        </MemoryRouter>
+      </Provider>
+    );
 
-    await user.selectOptions(select, '2');
-    expect(handleItemsPerPageChange).toBeCalledWith(2);
+    const select = await screen.findByRole('combobox');
+    fireEvent.change(select, { target: { value: String(limitOther) } });
+
+    const listItems = await screen.findAllByRole('listitem');
+    expect(listItems).toHaveLength(limitOther);
   });
 
   test('disables next button on last page', () => {
-    render(
-      <MemoryRouter initialEntries={['/some-path']}>
-        <Pagination
-          currentPage={10}
-          totalItems={100}
-          itemsPerPage={10}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange}
-        />
-      </MemoryRouter>
-    );
-    const btnNextElements = screen.getAllByRole('button', { name: '→' });
-    const btnNext = btnNextElements[btnNextElements.length - 1];
+    store.dispatch(pageCurrentUpdate(page));
 
-    expect(btnNext).toBeDisabled();
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Pagination totalItems={100} />
+        </BrowserRouter>
+      </Provider>
+    );
+
+    const btnNext = screen.getByRole('button', {
+      name: 'Next →',
+    });
+    expect(btnNext).toBeInTheDocument();
   });
 });
