@@ -2,10 +2,10 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import styles from './Details.module.css';
 import NotFound from '../NotFound/NotFound';
-import { setView } from '../../Store/Reducers/DetailsReduser';
 import { useAppDispatch } from '../../hooks/reduxHoooks';
 import { useEffect } from 'react';
 import { useGetPersonQuery } from '../../API/CardService';
+import { loadingdetails } from '../../Store/Reducers/loadingReduser';
 
 const Details = (): JSX.Element | null => {
   const { id } = useParams() as { id: string };
@@ -15,11 +15,8 @@ const Details = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setView(true));
-    return () => {
-      dispatch(setView(false));
-    };
-  }, [dispatch]);
+    dispatch(loadingdetails(isLoading));
+  }, [dispatch, isLoading]);
 
   const handleClick = (): void => {
     navigate(`/${search}`);
@@ -28,8 +25,6 @@ const Details = (): JSX.Element | null => {
   if (isLoading) return <Loading />;
 
   if (error) return <NotFound />;
-
-  if (!data) return null;
 
   return (
     <div className={styles.wrapper}>
