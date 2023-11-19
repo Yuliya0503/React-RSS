@@ -16,15 +16,18 @@ const SearchField: React.FC<SearchFieldProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
+
+  const inputProps = value
+    ? { value, onChange: handleChange }
+    : { defaultValue };
+
   return (
     <input
       ref={textInput}
       className={styles.input}
       type="text"
       placeholder="Search"
-      value={value}
-      defaultValue={defaultValue}
-      onChange={handleChange}
+      {...inputProps}
     />
   );
 };
