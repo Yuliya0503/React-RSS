@@ -5,7 +5,7 @@ import CharacterInfo from './CharacterInfo/CharacterInfo';
 import LinkWithQueryParams from '../../Router/LinkWithQueryParams';
 
 const Card: React.FC<ICardPeopleProps> = ({ person }) => {
-  const id = person.url.split('/').filter(Boolean).at(-1);
+  const id: string | undefined = person.url.split('/').filter(Boolean).at(-1);
   return (
     <li key={id} className={styles.people_card}>
       <LinkWithQueryParams to={id || ''}>

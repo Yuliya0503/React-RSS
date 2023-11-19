@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import styles from './Details.module.css';
 import NotFound from '../NotFound/NotFound';
@@ -7,11 +7,10 @@ import { useGetPersonQuery } from '../../API/CardService';
 import useActions from '../../hooks/useActions';
 import NoResultSection from '../NoResultSection/NoResultSection';
 
-const Details = () => {
+const Details = (): JSX.Element => {
   const { id } = useParams() as { id: string };
   const { data, isFetching, isError } = useGetPersonQuery(id);
   const navigate = useNavigate();
-  const { search } = useLocation();
   const { loadingdetails } = useActions();
 
   useEffect(() => {
@@ -19,11 +18,10 @@ const Details = () => {
   }, [loadingdetails, isFetching]);
 
   const handleClick = (): void => {
-    navigate(`/${search}`);
+    navigate('/');
   };
 
   if (isFetching) return <Loading />;
-
   if (isError) return <NotFound />;
   if (!data) return <NoResultSection />;
 

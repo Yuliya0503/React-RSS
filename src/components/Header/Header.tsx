@@ -8,14 +8,14 @@ import { selectSearch } from '../../Store/Reducers/SearchReduser';
 import SearchButton from '../SearchInput/SearchButton/SearchButton';
 import useActions from '../../hooks/useActions';
 
-const Header = () => {
+const Header = (): JSX.Element => {
   const textInput = useRef<HTMLInputElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { setRootSearch, pageCurrentUpdate } = useActions();
-  const searchTerm = useAppSelector(selectSearch);
+  const searchTerm: string = useAppSelector(selectSearch);
 
   const handleSearchClick = () => {
-    const value = textInput.current?.value.trim() || '';
+    const value: string = textInput.current?.value.trim() || '';
     setLocalStorage(value);
     setRootSearch(value);
     pageCurrentUpdate(DEFAULT_PAGE);
@@ -38,14 +38,14 @@ const Header = () => {
           Star Wars
         </h1>
       </Link>
-      <div className={styles.form}>
+      <form className={styles.form}>
         <input
           ref={textInput}
           defaultValue={searchTerm}
           className={styles.input}
         />
         <SearchButton onClick={handleSearchClick} />
-      </div>
+      </form>
     </header>
   );
 };

@@ -15,20 +15,22 @@ interface PaginationProps {
 }
 
 const Pagination = ({ totalItems }: PaginationProps) => {
-  const limit = useAppSelector(selectPageItems);
-  const currentPage = useAppSelector(selectPage);
+  const limit: number = useAppSelector(selectPageItems);
+  const currentPage: number = useAppSelector(selectPage);
   const { setPageItems, pageCurrentUpdate } = useActions();
   const [searchParams, setSearchParams] = useSearchParams();
-  const totalPages = Math.ceil(totalItems / DEFAULT_LIMIT);
-  const isPrevButtonDisabled = currentPage <= DEFAULT_PAGE;
-  const isNextButtonDisabled = currentPage >= totalPages;
+  const totalPages: number = Math.ceil(totalItems / DEFAULT_LIMIT);
+  const isPrevButtonDisabled: boolean = currentPage <= DEFAULT_PAGE;
+  const isNextButtonDisabled: boolean = currentPage >= totalPages;
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (newPage: number): void => {
     pageCurrentUpdate(newPage);
     setSearchParams({ [SEARCH_PARAM_PAGE]: String(newPage) });
   };
 
-  const handleItemsPerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleItemsPerPageChange = (
+    e: ChangeEvent<HTMLSelectElement>
+  ): void => {
     const { value } = e.target;
     setPageItems(+value);
     pageCurrentUpdate(DEFAULT_PAGE);
@@ -36,20 +38,23 @@ const Pagination = ({ totalItems }: PaginationProps) => {
     setSearchParams(searchParams);
   };
 
+  const prevPage: number = currentPage - 1;
+  const nextPage: number = currentPage + 1;
+
   return (
     <div className={styles.container}>
       <button
-        className={styles.button}
+        className={`${styles.button} ${styles.prevButton}`}
         disabled={isPrevButtonDisabled}
-        onClick={() => handlePageChange(currentPage - 1)}
+        onClick={() => handlePageChange(prevPage)}
       >
         ← Prev
       </button>
-      <span className={styles.currentPage}>{currentPage}</span>
+      <label className={styles.currentPage}>{currentPage}</label>
       <button
-        className={styles.button}
+        className={`${styles.button} ${styles.nextButton}`}
         disabled={isNextButtonDisabled}
-        onClick={() => handlePageChange(currentPage + 1)}
+        onClick={() => handlePageChange(nextPage)}
       >
         Next →
       </button>
@@ -61,7 +66,6 @@ const Pagination = ({ totalItems }: PaginationProps) => {
         <option value="2">2</option>
         <option value="5">5</option>
         <option value={DEFAULT_LIMIT}>{DEFAULT_LIMIT}</option>
-        <option value={totalItems}>All</option>
       </select>
     </div>
   );
