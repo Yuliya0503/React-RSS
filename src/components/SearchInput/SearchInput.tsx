@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef } from 'react';
+import { useRef } from 'react';
 import styles from './SearchInput.module.css';
 import SearchField from './SearchField/SearchField';
 import SearchButton from './SearchButton/SearchButton';
@@ -9,12 +9,9 @@ import {
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHoooks';
 import { DEFAULT_PAGE, SEARCH_PARAM_PAGE } from '../../models/constants';
 import { useSearchParams } from 'react-router-dom';
+import { pageCurrentUpdate } from '../../Store/Reducers/PageCurrentSlice';
 
-interface SearchInputProps {
-  setPage: Dispatch<SetStateAction<number>>;
-}
-
-const SearchInput: React.FC<SearchInputProps> = ({ setPage }) => {
+const SearchInput = () => {
   const textInput = useRef<HTMLInputElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
@@ -27,9 +24,10 @@ const SearchInput: React.FC<SearchInputProps> = ({ setPage }) => {
   const handleSearchClick = () => {
     const value = textInput.current?.value.trim() || '';
     dispatch(setRootSearch(value));
-    setPage(DEFAULT_PAGE);
+    dispatch(pageCurrentUpdate(DEFAULT_PAGE));
     searchParams.delete(SEARCH_PARAM_PAGE);
     setSearchParams(searchParams);
+    textInput.current?.focus();
   };
 
   return (
