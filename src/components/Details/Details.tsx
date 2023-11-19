@@ -2,29 +2,30 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import styles from './Details.module.css';
 import NotFound from '../NotFound/NotFound';
-import { useAppDispatch } from '../../hooks/reduxHoooks';
 import { useEffect } from 'react';
 import { useGetPersonQuery } from '../../API/CardService';
-import { loadingdetails } from '../../Store/Reducers/loadingReduser';
+import useActions from '../../hooks/useActions';
+import NoResultSection from '../NoResultSection/NoResultSection';
 
-const Details = (): JSX.Element | null => {
+const Details = () => {
   const { id } = useParams() as { id: string };
-  const { data, error, isLoading } = useGetPersonQuery(id);
+  const { data, isFetching, isError } = useGetPersonQuery(id);
   const navigate = useNavigate();
   const { search } = useLocation();
-  const dispatch = useAppDispatch();
+  const { loadingdetails } = useActions();
 
   useEffect(() => {
-    dispatch(loadingdetails(isLoading));
-  }, [dispatch, isLoading]);
+    loadingdetails(isFetching);
+  }, [loadingdetails, isFetching]);
 
   const handleClick = (): void => {
     navigate(`/${search}`);
   };
 
-  if (isLoading) return <Loading />;
+  if (isFetching) return <Loading />;
 
-  if (error) return <NotFound />;
+  if (isError) return <NotFound />;
+  if (!data) return <NoResultSection />;
 
   return (
     <div className={styles.wrapper}>

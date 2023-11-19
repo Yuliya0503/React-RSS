@@ -2,19 +2,13 @@ import styles from './Pagination.module.css';
 import { ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-  selectPageItems,
-  setPageItems,
-} from '../../Store/Reducers/PageSliceReduser';
-import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
   SEARCH_PARAM_PAGE,
 } from '../../models/constants';
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHoooks';
-import {
-  pageCurrentUpdate,
-  selectPage,
-} from '../../Store/Reducers/PageCurrentSlice';
+import { useAppSelector, useActions } from '../../hooks/reduxHoooks';
+import { selectPage } from '../../Store/Reducers/PageCurrentSlice';
+import { selectPageItems } from '../../Store/Reducers/PageSliceReduser';
 
 interface PaginationProps {
   totalItems: number;
@@ -23,21 +17,21 @@ interface PaginationProps {
 const Pagination = ({ totalItems }: PaginationProps) => {
   const limit = useAppSelector(selectPageItems);
   const currentPage = useAppSelector(selectPage);
-  const dispatch = useAppDispatch();
+  const { setPageItems, pageCurrentUpdate } = useActions();
   const [searchParams, setSearchParams] = useSearchParams();
   const totalPages = Math.ceil(totalItems / DEFAULT_LIMIT);
-  const isPrevButtonDisabled = currentPage === DEFAULT_PAGE;
-  const isNextButtonDisabled = currentPage === totalPages;
+  const isPrevButtonDisabled = currentPage <= DEFAULT_PAGE;
+  const isNextButtonDisabled = currentPage >= totalPages;
 
   const handlePageChange = (newPage: number) => {
-    dispatch(pageCurrentUpdate(newPage));
+    pageCurrentUpdate(newPage);
     setSearchParams({ [SEARCH_PARAM_PAGE]: String(newPage) });
   };
 
   const handleItemsPerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
-    dispatch(setPageItems(+value));
-    dispatch(pageCurrentUpdate(DEFAULT_PAGE));
+    setPageItems(+value);
+    pageCurrentUpdate(DEFAULT_PAGE);
     searchParams.delete(SEARCH_PARAM_PAGE);
     setSearchParams(searchParams);
   };
