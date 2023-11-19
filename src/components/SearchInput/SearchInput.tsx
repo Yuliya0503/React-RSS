@@ -1,42 +1,22 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import styles from './SearchInput.module.css';
-import SearchField from './SearchField/SearchField';
 import SearchButton from './SearchButton/SearchButton';
-import {
-  selectSearch,
-  setRootSearch,
-} from '../../Store/Reducers/SearchReduser';
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHoooks';
-import { DEFAULT_PAGE, SEARCH_PARAM_PAGE } from '../../models/constants';
-import { useSearchParams } from 'react-router-dom';
-import { pageCurrentUpdate } from '../../Store/Reducers/PageCurrentSlice';
 
-const SearchInput = () => {
+interface SearchInputProps {
+  onSearchClick: (value: string) => void;
+}
+
+const SearchInput: React.FC<SearchInputProps> = ({ onSearchClick }) => {
   const textInput = useRef<HTMLInputElement>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const dispatch = useAppDispatch();
-  const searchRootString = useAppSelector(selectSearch);
-
-  const handleSearchChange = (value: string) => {
-    dispatch(setRootSearch(value));
-  };
 
   const handleSearchClick = () => {
     const value = textInput.current?.value.trim() || '';
-    dispatch(setRootSearch(value));
-    dispatch(pageCurrentUpdate(DEFAULT_PAGE));
-    searchParams.delete(SEARCH_PARAM_PAGE);
-    setSearchParams(searchParams);
-    textInput.current?.focus();
+    onSearchClick(value);
   };
 
   return (
     <div className={styles.form}>
-      <SearchField
-        value={searchRootString}
-        defaultValue={searchRootString}
-        onChange={handleSearchChange}
-      />
+      <input ref={textInput} type="text" placeholder="Search" />
       <SearchButton onClick={handleSearchClick} />
     </div>
   );
