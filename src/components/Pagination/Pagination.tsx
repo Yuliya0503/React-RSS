@@ -1,5 +1,5 @@
 import styles from './Pagination.module.css';
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   selectPageItems,
@@ -11,34 +11,33 @@ import {
   SEARCH_PARAM_PAGE,
 } from '../../models/constants';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHoooks';
+import {
+  pageCurrentUpdate,
+  selectPage,
+} from '../../Store/Reducers/PageCurrentSlice';
 
 interface PaginationProps {
-  currentPage: number;
   totalItems: number;
-  setPage: Dispatch<SetStateAction<number>>;
 }
 
-export const Pagination = ({
-  currentPage,
-  totalItems,
-  setPage,
-}: PaginationProps) => {
+const Pagination = ({ totalItems }: PaginationProps) => {
   const limit = useAppSelector(selectPageItems);
+  const currentPage = useAppSelector(selectPage);
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const totalPages = Math.ceil(totalItems / DEFAULT_LIMIT);
-  const isPrevButtonDisabled = currentPage <= 1;
-  const isNextButtonDisabled = currentPage >= totalPages;
+  const isPrevButtonDisabled = currentPage === DEFAULT_PAGE;
+  const isNextButtonDisabled = currentPage === totalPages;
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    dispatch(pageCurrentUpdate(newPage));
     setSearchParams({ [SEARCH_PARAM_PAGE]: String(newPage) });
   };
 
   const handleItemsPerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     dispatch(setPageItems(+value));
-    setPage(DEFAULT_PAGE);
+    dispatch(pageCurrentUpdate(DEFAULT_PAGE));
     searchParams.delete(SEARCH_PARAM_PAGE);
     setSearchParams(searchParams);
   };
@@ -50,7 +49,7 @@ export const Pagination = ({
         disabled={isPrevButtonDisabled}
         onClick={() => handlePageChange(currentPage - 1)}
       >
-        ←
+        ← Prev
       </button>
       <span className={styles.currentPage}>{currentPage}</span>
       <button
@@ -58,7 +57,7 @@ export const Pagination = ({
         disabled={isNextButtonDisabled}
         onClick={() => handlePageChange(currentPage + 1)}
       >
-        →
+        Next →
       </button>
       <select
         className={styles.select}
@@ -68,7 +67,9 @@ export const Pagination = ({
         <option value="2">2</option>
         <option value="5">5</option>
         <option value={DEFAULT_LIMIT}>{DEFAULT_LIMIT}</option>
+        <option value={totalItems}>All</option>
       </select>
     </div>
   );
 };
+export default Pagination;
