@@ -14,21 +14,27 @@ import Pagination from '../Pagination/Pagination';
 import useActions from '../../hooks/useActions';
 import NotFound from '../NotFound/NotFound';
 
+const buildSearchParams = (
+  searchTerm: string,
+  limit: number,
+  currentPage: number
+): string => {
+  const searchParams = new URLSearchParams();
+  searchTerm && searchParams.append('search', searchTerm);
+  limit && searchParams.append('limit', limit.toString());
+  currentPage && searchParams.append('page', currentPage.toString());
+  return searchParams.toString();
+};
+
 const PeopleSection = (): JSX.Element => {
   const { loadingSearchPage } = useActions();
   const searchTerm = useAppSelector(selectSearch);
   const limit = useAppSelector(selectPageItems);
   const currentPage = useAppSelector(selectPage);
 
-  const buildSearchParams = (): string => {
-    const searchParams = new URLSearchParams();
-    searchTerm && searchParams.append('search', searchTerm);
-    limit && searchParams.append('limit', limit.toString());
-    currentPage && searchParams.append('page', currentPage.toString());
-    return searchParams.toString();
-  };
+  const searchParams = buildSearchParams(searchTerm, limit, currentPage);
 
-  const { isFetching, data, isError } = useGetPeopleQuery(buildSearchParams());
+  const { isFetching, data, isError } = useGetPeopleQuery(searchParams);
 
   useEffect(() => {
     loadingSearchPage(isFetching);
@@ -36,24 +42,27 @@ const PeopleSection = (): JSX.Element => {
 
   if (isFetching) return <Loading />;
   if (isError) return <NotFound />;
-  if (!data) return <NoResultSection />;
 
-  const { results: persons = [], count } = data;
+  const { results: persons = [], count } = data || {};
   const truncatedPersons: IPeople[] = persons.slice(0, limit);
-
-  if (!truncatedPersons.length) return <NoResultSection />;
 
   return (
     <section className={styles.section_wrapper}>
-      <div className={styles.people_wrapper}>
-        <ul className={styles.card_wrapper}>
-          {truncatedPersons.map((person: IPeople) => (
-            <Card key={person.url} person={person} />
-          ))}
-        </ul>
-        <Outlet />
-      </div>
-      <Pagination totalItems={count} />
+      {truncatedPersons.length === 0 ? (
+        <NoResultSection />
+      ) : (
+        <>
+          <div className={styles.people_wrapper}>
+            <ul className={styles.card_wrapper}>
+              {truncatedPersons.map((person: IPeople) => (
+                <Card key={person.url} person={person} />
+              ))}
+            </ul>
+            <Outlet />
+          </div>
+          <Pagination totalItems={count as number} />
+        </>
+      )}
     </section>
   );
 };

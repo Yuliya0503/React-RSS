@@ -38,14 +38,14 @@ const Header = (): JSX.Element => {
           Star Wars
         </h1>
       </Link>
-      <form className={styles.form}>
+      <div className={styles.form}>
         <input
           ref={textInput}
           defaultValue={searchTerm}
           className={styles.input}
         />
         <SearchButton onClick={handleSearchClick} />
-      </form>
+      </div>
     </header>
   );
 };

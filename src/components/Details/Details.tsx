@@ -1,11 +1,11 @@
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../Loading/Loading';
-import styles from './Details.module.css';
 import NotFound from '../NotFound/NotFound';
-import { useEffect } from 'react';
+import NoResultSection from '../NoResultSection/NoResultSection';
 import { useGetPersonQuery } from '../../API/CardService';
 import useActions from '../../hooks/useActions';
-import NoResultSection from '../NoResultSection/NoResultSection';
+import styles from './Details.module.css';
 
 const Details = (): JSX.Element => {
   const { id } = useParams() as { id: string };
@@ -21,25 +21,28 @@ const Details = (): JSX.Element => {
     navigate('/');
   };
 
-  if (isFetching) return <Loading />;
-  if (isError) return <NotFound />;
-  if (!data) return <NoResultSection />;
-
   return (
-    <div className={styles.wrapper}>
-      <h2 className={styles.title}>{data.name}</h2>
-      <p className={styles.text}>Gender: {data.gender}</p>
-      <p className={styles.text}>Height: {data.height}</p>
-      <p className={styles.text}>Skin color: {data.skin_color}</p>
-      <p className={styles.text}>Hair color: {data.hair_color}</p>
-      <p className={styles.text}>Eye color: {data.eye_color}</p>
-      <div className={styles.button_wrapper}>
-        <button className={styles.button} onClick={handleClick}>
-          Close
-        </button>
-      </div>
-      <button className={styles.over} onClick={handleClick}></button>
-    </div>
+    <>
+      {isFetching && <Loading />}
+      {isError && <NotFound />}
+      {!data && <NoResultSection />}
+      {data && (
+        <div className={styles.wrapper}>
+          <h2 className={styles.title}>{data.name}</h2>
+          <p className={styles.text}>Gender: {data.gender}</p>
+          <p className={styles.text}>Height: {data.height}</p>
+          <p className={styles.text}>Skin color: {data.skin_color}</p>
+          <p className={styles.text}>Hair color: {data.hair_color}</p>
+          <p className={styles.text}>Eye color: {data.eye_color}</p>
+          <div className={styles.button_wrapper}>
+            <button className={styles.button} onClick={handleClick}>
+              Close
+            </button>
+          </div>
+          <button className={styles.over} onClick={handleClick}></button>
+        </div>
+      )}
+    </>
   );
 };
 

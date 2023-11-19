@@ -19,7 +19,7 @@ const Pagination = ({ totalItems }: PaginationProps) => {
   const currentPage: number = useAppSelector(selectPage);
   const { setPageItems, pageCurrentUpdate } = useActions();
   const [searchParams, setSearchParams] = useSearchParams();
-  const totalPages: number = Math.ceil(totalItems / DEFAULT_LIMIT);
+  const totalPages: number = Math.max(1, Math.ceil(totalItems / DEFAULT_LIMIT));
   const isPrevButtonDisabled: boolean = currentPage <= DEFAULT_PAGE;
   const isNextButtonDisabled: boolean = currentPage >= totalPages;
 
@@ -59,6 +59,7 @@ const Pagination = ({ totalItems }: PaginationProps) => {
         Next →
       </button>
       <select
+        id="itemsPerPage"
         className={styles.select}
         value={limit}
         onChange={handleItemsPerPageChange}
@@ -70,4 +71,5 @@ const Pagination = ({ totalItems }: PaginationProps) => {
     </div>
   );
 };
+
 export default Pagination;
