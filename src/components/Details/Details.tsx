@@ -6,6 +6,7 @@ import NoResultSection from '../NoResultSection/NoResultSection';
 import { useGetPersonQuery } from '../../API/CardService';
 import useActions from '../../hooks/useActions';
 import styles from './Details.module.css';
+import DetailsInfo from './DetailsInfo/DetailsInfo';
 
 const Details = (): JSX.Element => {
   const { id } = useParams() as { id: string };
@@ -25,15 +26,10 @@ const Details = (): JSX.Element => {
     <>
       {isFetching && <Loading />}
       {isError && <NotFound />}
-      {!data && <NoResultSection />}
+      {!isFetching && !data && <NoResultSection />}
       {data && (
         <div className={styles.wrapper}>
-          <h2 className={styles.title}>{data.name}</h2>
-          <p className={styles.text}>Gender: {data.gender}</p>
-          <p className={styles.text}>Height: {data.height}</p>
-          <p className={styles.text}>Skin color: {data.skin_color}</p>
-          <p className={styles.text}>Hair color: {data.hair_color}</p>
-          <p className={styles.text}>Eye color: {data.eye_color}</p>
+          <DetailsInfo person={data} />
           <div className={styles.button_wrapper}>
             <button className={styles.button} onClick={handleClick}>
               Close
