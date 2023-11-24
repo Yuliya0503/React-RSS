@@ -1,27 +1,23 @@
-import { useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { DEFAULT_PAGE, SEARCH_PARAM_PAGE } from '../../models/constants';
+import { useRef, useState } from 'react';
+import { DEFAULT_LIMIT } from '../../models/constants';
 import styles from './Header.module.css';
-import { setLocalStorage } from '../../LocalStorage/setLocalStorage';
-import { useAppSelector } from '../../hooks/reduxHoooks';
-import { selectSearch } from '../../Store/Reducers/SearchReduser';
 import SearchButton from '../SearchInput/SearchButton/SearchButton';
-import useActions from '../../hooks/useActions';
+import { NextRouter, useRouter } from 'next/router';
 
 const Header = (): JSX.Element => {
   const textInput = useRef<HTMLInputElement>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { setRootSearch, pageCurrentUpdate } = useActions();
-  const searchTerm: string = useAppSelector(selectSearch);
+  const router: NextRouter = useRouter();
+  const [search, setSearch] = useState<number | string>(
+    Number(router.query.search) || ''
+  );
 
   const handleSearchClick = () => {
-    const value: string = textInput.current?.value.trim() || '';
-    setLocalStorage(value);
-    setRootSearch(value);
-    pageCurrentUpdate(DEFAULT_PAGE);
-
-    searchParams.delete(SEARCH_PARAM_PAGE);
-    setSearchParams(searchParams);
+    const searchTerm = textInput.current?.value.trim() || '';
+    setSearch(searchTerm);
+    router.push({
+      pathname: '/',
+      query: { search: searchTerm, limit: router.query.limit || DEFAULT_LIMIT },
+    });
   };
 
   const handleButtonClick = () => {
@@ -33,17 +29,11 @@ const Header = (): JSX.Element => {
 
   return (
     <header className={styles.header}>
-      <Link to="/" className={styles.title_wrapper}>
-        <h1 className={styles.title} onClick={handleButtonClick}>
-          Star Wars
-        </h1>
-      </Link>
+      <a href="/" className={styles.title_wrapper} onClick={handleButtonClick}>
+        <h1 className={styles.title}>Star Wars</h1>
+      </a>
       <div className={styles.form}>
-        <input
-          ref={textInput}
-          defaultValue={searchTerm}
-          className={styles.input}
-        />
+        <input ref={textInput} defaultValue={search} className={styles.input} />
         <SearchButton onClick={handleSearchClick} />
       </div>
     </header>
