@@ -1,8 +1,9 @@
 import React from 'react';
+import Header from '@/src/components/Header/Header';
 
 const HomePage = (): JSX.Element => (
   <>
-    <h1>Ok</h1>
+    <Header />
   </>
 );
 
