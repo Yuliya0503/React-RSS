@@ -3,6 +3,7 @@ import { DEFAULT_LIMIT } from '../../models/constants';
 import styles from './Header.module.css';
 import SearchButton from '../SearchInput/SearchButton/SearchButton';
 import { NextRouter, useRouter } from 'next/router';
+import { setLocalStorage } from '@/src/LocalStorage/setLocalStorage';
 
 const Header = (): JSX.Element => {
   const textInput = useRef<HTMLInputElement>(null);
@@ -14,6 +15,7 @@ const Header = (): JSX.Element => {
   const handleSearchClick = () => {
     const searchTerm = textInput.current?.value.trim() || '';
     setSearch(searchTerm);
+    setLocalStorage(searchTerm);
     router.push({
       pathname: '/',
       query: { search: searchTerm, limit: router.query.limit || DEFAULT_LIMIT },

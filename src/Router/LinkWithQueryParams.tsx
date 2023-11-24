@@ -1,22 +1,31 @@
 import React from 'react';
-import { useLocation, Link, LinkProps } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styles from './LinkWithQueryParams.module.css';
 
-interface LinkWithQueryParamsProps extends LinkProps {
+interface LinkWithQueryParamsProps {
+  children: React.ReactNode;
   to: string;
 }
 
 const LinkWithQueryParams: React.FC<LinkWithQueryParamsProps> = ({
   children,
   to,
-  ...props
 }: LinkWithQueryParamsProps) => {
-  const { search } = useLocation();
-  const toWithPath = to && to.trim() !== '' ? to + search : to;
+  const router = useRouter();
+  const { query } = router;
+
+  const queryParams = new URLSearchParams(
+    query as Record<string, string>
+  ).toString();
+  const toWithQueryParams =
+    to + (queryParams.toString() ? `?${queryParams.toString()}` : '');
+
   return (
-    <Link to={toWithPath} {...props} className={styles.links}>
-      {children}
+    <Link href={toWithQueryParams}>
+      <a className={styles.links}>{children}</a>
     </Link>
   );
 };
+
 export default LinkWithQueryParams;
