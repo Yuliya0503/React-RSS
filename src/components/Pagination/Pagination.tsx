@@ -1,45 +1,39 @@
 import styles from './Pagination.module.css';
 import { ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
-import {
-  DEFAULT_LIMIT,
-  DEFAULT_PAGE,
-  SEARCH_PARAM_PAGE,
-} from '../../models/constants';
-import { useAppSelector, useActions } from '../../hooks/reduxHoooks';
-import { selectPage } from '../../Store/Reducers/PageCurrentSlice';
-import { selectPageItems } from '../../Store/Reducers/PageSliceReduser';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../models/constants';
+import { encode } from 'querystring';
 
 interface PaginationProps {
   totalItems: number;
 }
 
 const Pagination = ({ totalItems }: PaginationProps) => {
-  const limit: number = useAppSelector(selectPageItems);
-  const currentPage: number = useAppSelector(selectPage);
-  const { setPageItems, pageCurrentUpdate } = useActions();
   const router = useRouter();
+  const searchParams = new URLSearchParams(encode(router.query));
+  const limit: number = Number(searchParams.get('limit')) || DEFAULT_LIMIT;
+  const currentPage: number = Number(searchParams.get('page')) || DEFAULT_PAGE;
+  const search: string = searchParams.get('search') || '';
+  const commonQuery = { pathname: '/', query: { search, currentPage, limit } };
+
   const totalPages: number = Math.max(1, Math.ceil(totalItems / DEFAULT_LIMIT));
   const isPrevButtonDisabled: boolean = currentPage <= DEFAULT_PAGE;
   const isNextButtonDisabled: boolean = currentPage >= totalPages;
 
   const handlePageChange = (newPage: number): void => {
     router.push({
-      pathname: router.pathname,
-      query: { ...router.query, [SEARCH_PARAM_PAGE]: String(newPage) },
+      ...commonQuery,
+      query: { ...commonQuery.query, currentPage: newPage },
     });
-    pageCurrentUpdate(newPage);
   };
 
   const handleItemsPerPageChange = (
     e: ChangeEvent<HTMLSelectElement>
   ): void => {
     const { value } = e.target;
-    setPageItems(+value);
-    pageCurrentUpdate(DEFAULT_PAGE);
     router.push({
-      pathname: router.pathname,
-      query: { ...router.query, [SEARCH_PARAM_PAGE]: undefined },
+      ...commonQuery,
+      query: { ...commonQuery.query, limit: value },
     });
   };
 
