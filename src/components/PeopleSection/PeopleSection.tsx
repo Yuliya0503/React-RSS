@@ -4,14 +4,10 @@ import Card from '../Card/Card';
 import NoResultSection from '../NoResultSection/NoResultSection';
 import Loading from '../Loading/Loading';
 import styles from './PeopleSection.module.css';
-import { useAppSelector } from '../../hooks/reduxHoooks';
-import { selectPageItems } from '../../Store/Reducers/PageSliceReduser';
-import { selectSearch } from '../../Store/Reducers/SearchReduser';
-import { selectPage } from '../../Store/Reducers/PageCurrentSlice';
 import { useGetPeopleQuery } from '../../API/CardService';
 import Pagination from '../Pagination/Pagination';
-import useActions from '../../hooks/useActions';
 import NotFound from '../NotFound/NotFound';
+import { useRouter } from 'next/router';
 
 const buildSearchParams = (
   searchTerm: string,
@@ -26,18 +22,16 @@ const buildSearchParams = (
 };
 
 const PeopleSection = (): JSX.Element => {
-  const { loadingSearchPage } = useActions();
-  const searchTerm = useAppSelector(selectSearch);
-  const limit = useAppSelector(selectPageItems);
-  const currentPage = useAppSelector(selectPage);
+  const router = useRouter();
+  const searchTerm = (router.query.search as string) || '';
+  const limit = Number(router.query.limit) || 10;
+  const currentPage = Number(router.query.page) || 1;
 
   const searchParams = buildSearchParams(searchTerm, limit, currentPage);
 
   const { isFetching, data, isError } = useGetPeopleQuery(searchParams);
 
-  useEffect(() => {
-    loadingSearchPage(isFetching);
-  }, [loadingSearchPage, isFetching]);
+  useEffect(() => {}, [router.query]);
 
   if (isFetching) return <Loading />;
   if (isError) return <NotFound />;
