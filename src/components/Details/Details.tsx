@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import Loading from '../Loading/Loading';
 import NotFound from '../NotFound/NotFound';
 import NoResultSection from '../NoResultSection/NoResultSection';
@@ -9,9 +9,9 @@ import styles from './Details.module.css';
 import DetailsInfo from './DetailsInfo/DetailsInfo';
 
 const Details = (): JSX.Element => {
-  const { id } = useParams() as { id: string };
+  const router = useRouter();
+  const { id } = router.query as { id: string };
   const { data, isFetching, isError } = useGetPersonQuery(id);
-  const navigate = useNavigate();
   const { loadingdetails } = useActions();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const Details = (): JSX.Element => {
   }, [loadingdetails, isFetching]);
 
   const handleClick = (): void => {
-    navigate('/');
+    router.push('/');
   };
 
   return (
