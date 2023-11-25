@@ -1,6 +1,6 @@
 import styles from './Pagination.module.css';
 import { ChangeEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
@@ -18,14 +18,17 @@ const Pagination = ({ totalItems }: PaginationProps) => {
   const limit: number = useAppSelector(selectPageItems);
   const currentPage: number = useAppSelector(selectPage);
   const { setPageItems, pageCurrentUpdate } = useActions();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
   const totalPages: number = Math.max(1, Math.ceil(totalItems / DEFAULT_LIMIT));
   const isPrevButtonDisabled: boolean = currentPage <= DEFAULT_PAGE;
   const isNextButtonDisabled: boolean = currentPage >= totalPages;
 
   const handlePageChange = (newPage: number): void => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, [SEARCH_PARAM_PAGE]: String(newPage) },
+    });
     pageCurrentUpdate(newPage);
-    setSearchParams({ [SEARCH_PARAM_PAGE]: String(newPage) });
   };
 
   const handleItemsPerPageChange = (
@@ -34,8 +37,10 @@ const Pagination = ({ totalItems }: PaginationProps) => {
     const { value } = e.target;
     setPageItems(+value);
     pageCurrentUpdate(DEFAULT_PAGE);
-    searchParams.delete(SEARCH_PARAM_PAGE);
-    setSearchParams(searchParams);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, [SEARCH_PARAM_PAGE]: undefined },
+    });
   };
 
   const prevPage: number = currentPage - 1;

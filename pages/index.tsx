@@ -1,11 +1,12 @@
 import React from 'react';
 import Header from '@/src/components/Header/Header';
-import PeopleSection from '@/src/components/PeopleSection/PeopleSection';
+//import PeopleSection from '@/src/components/PeopleSection/PeopleSection';
+import Pagination from '@/src/components/Pagination/Pagination';
 
 const HomePage = (): JSX.Element => (
   <>
     <Header />
-    <PeopleSection />
+    <Pagination totalItems={3} />
   </>
 );
 
