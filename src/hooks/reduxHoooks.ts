@@ -1,5 +1,5 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../Store/RootReducer';
+import { RootState } from '../Store/Store';
 import { AppDispatch } from '../Store/Store';
 import useActions from './useActions';
 
