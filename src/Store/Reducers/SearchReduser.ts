@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { getLocalStorage } from '../../LocalStorage/getlocalStorage';
+// import { getLocalStorage } from '../../LocalStorage/getlocalStorage';
 import { RootState } from '../RootReducer';
 interface ISearchString {
   searchRootString: string;
 }
 
 const initialState: ISearchString = {
-  searchRootString: getLocalStorage(),
+  searchRootString: '',
 };
 
 const searchSlice = createSlice({

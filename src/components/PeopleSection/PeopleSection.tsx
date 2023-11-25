@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { IPeople } from '../../models/ISWAPI';
 import Card from '../Card/Card';
-import { Outlet } from 'react-router-dom';
 import NoResultSection from '../NoResultSection/NoResultSection';
 import Loading from '../Loading/Loading';
 import styles from './PeopleSection.module.css';
@@ -58,7 +57,6 @@ const PeopleSection = (): JSX.Element => {
                 <Card key={person.url} person={person} />
               ))}
             </ul>
-            <Outlet />
           </div>
           <Pagination totalItems={count as number} />
         </>
