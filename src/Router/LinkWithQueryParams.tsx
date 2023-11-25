@@ -22,8 +22,8 @@ const LinkWithQueryParams: React.FC<LinkWithQueryParamsProps> = ({
     to + (queryParams.toString() ? `?${queryParams.toString()}` : '');
 
   return (
-    <Link href={toWithQueryParams}>
-      <a className={styles.links}>{children}</a>
+    <Link href={toWithQueryParams} className={styles.links}>
+      {children}
     </Link>
   );
 };
