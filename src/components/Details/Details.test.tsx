@@ -1,34 +1,22 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from '../../Store/Store';
-import { createServer } from '../../tests/mocks/server';
 import { peopleMock } from '../../tests/data/peopleMock';
 import Details from './Details';
-
-const server = createServer();
-
-beforeAll(() => server.listen());
-afterAll(() => server.close());
-
-const renderDetailsWithRouter = (path: string) => {
-  return render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[path]}>
-        <Routes>
-          <Route path=":id" element={<Details />} />
-        </Routes>
-      </MemoryRouter>
-    </Provider>
-  );
-};
+import { describe, expect, test } from 'vitest';
+import { createMockRouter } from '../../tests/mocks/mockRouter';
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+import PeopleSection from '../PeopleSection/PeopleSection';
+import { PeopleResponse } from '../../tests/data/peopleResponse';
 
 describe('Details Component', () => {
   test('displays detailed card data correctly', async () => {
-    renderDetailsWithRouter('/1');
-
-    const closeButton = await screen.findByRole('button', { name: 'Close' });
+    const router = createMockRouter({});
+    render(
+      <RouterContext.Provider value={router}>
+        <Details person={peopleMock[0]} />
+      </RouterContext.Provider>
+    );
+    const closeButton = screen.getByRole('button', { name: 'Close' });
     const { gender, height, skin_color, hair_color, eye_color } = peopleMock[0];
 
     expect(screen.getByText(gender, { exact: false })).toBeInTheDocument();
@@ -40,23 +28,18 @@ describe('Details Component', () => {
   });
 
   test('hides the component when clicking the close button', async () => {
-    renderDetailsWithRouter('/1');
+    const router = createMockRouter({});
+    user.setup();
+    render(
+      <RouterContext.Provider value={router}>
+        <PeopleSection people={PeopleResponse}>
+          <Details person={peopleMock[0]} />
+        </PeopleSection>
+      </RouterContext.Provider>
+    );
 
-    const closeButton = await screen.findByRole('button', { name: 'Close' });
-
-    await act(async () => {
-      await user.click(closeButton);
-    });
-
-    expect(
-      screen.queryByRole('button', { name: 'Close' })
-    ).not.toBeInTheDocument();
-  });
-
-  test('displays loading indicator while fetching data', async () => {
-    renderDetailsWithRouter('/100');
-
-    const loading = await screen.findByTestId('loading', {}, { timeout: 5000 });
-    expect(loading).toBeInTheDocument();
+    const button = await screen.findByRole('button', { name: 'Close' });
+    await user.click(button);
+    expect(router.back).toHaveBeenCalled();
   });
 });

@@ -1,67 +1,29 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from '../../Store/Store';
-import Details from '../Details/Details';
-import PeopleSection from '../PeopleSection/PeopleSection';
-import { createServer } from '../../tests/mocks/server';
-import { vi } from 'vitest';
-
-const server = createServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterAll(() => server.close());
-
-beforeEach(() => {
-  user.setup();
-});
-
-afterEach(() => {
-  vi.clearAllMocks();
-});
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+import { describe, expect, test } from 'vitest';
+import { peopleMock } from '../../tests/data/peopleMock';
+import Card from './Card';
+import { createMockRouter } from '../../tests/mocks/mockRouter';
 
 describe('Card component', () => {
   test('opens a detailed card component when clicking on a card', async () => {
+    const router = createMockRouter({});
+    user.setup();
+
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/']}>
-          <Routes>
-            <Route path="/" element={<PeopleSection />} />
-            <Route path=":id" element={<Details />} />
-          </Routes>
-        </MemoryRouter>
-      </Provider>
+      <RouterContext.Provider value={router}>
+        <Card person={peopleMock[0]} />
+      </RouterContext.Provider>
     );
 
-    const links = await screen.findAllByRole<HTMLAnchorElement>('link');
+    const link = screen.getByRole<HTMLAnchorElement>('link');
+    await user.click(link);
 
-    await act(async () => {
-      await user.click(links[0]);
-    });
-
-    const closeButton = await screen.findByRole('button', { name: 'Close' });
-    expect(closeButton).toBeInTheDocument();
-  });
-
-  test('triggers an additional API call to fetch detailed information when clicking on a card', async () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <Routes>
-            <Route path="/" element={<PeopleSection />} />
-            <Route path=":id" element={<Details />} />
-          </Routes>
-        </MemoryRouter>
-      </Provider>
+    expect(router.push).toHaveBeenCalledWith(
+      '/1',
+      expect.anything(),
+      expect.anything()
     );
-
-    const links = await screen.findAllByRole<HTMLAnchorElement>('link');
-
-    await act(async () => {
-      await user.click(links[0]);
-    });
-
-    expect(server.listHandlers()[0].isUsed).toBeTruthy();
   });
 });

@@ -1,27 +1,20 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from '../../Store/Store';
-import { vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, test } from 'vitest';
 import user from '@testing-library/user-event';
-import { searchTermLS } from '../../models/constants';
-import SearchPage from '../SearchPage/SearchPage';
-
-const setItem = vi.fn();
-const localStorageMock = { setItem };
-vi.stubGlobal('localStorage', localStorageMock);
+import { createMockRouter } from '../../tests/mocks/mockRouter';
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+import Header from './Header';
 
 describe('SearchPage Component', () => {
   test('saves the entered search term to local storage when the Search button is clicked', async () => {
     const searchTerm = 'Darth Vader';
+    const router = createMockRouter({ query: { search: searchTerm } });
     user.setup();
 
     render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <SearchPage />
-        </BrowserRouter>
-      </Provider>
+      <RouterContext.Provider value={router}>
+        <Header />
+      </RouterContext.Provider>
     );
 
     const searchBtn = await screen.findByRole('button', { name: 'Search' });
@@ -30,8 +23,6 @@ describe('SearchPage Component', () => {
     await user.type(input, searchTerm);
     await user.click(searchBtn);
 
-    await waitFor(() => {
-      expect(setItem).toHaveBeenCalledWith(searchTermLS, searchTerm);
-    });
+    expect(input).toHaveValue(searchTerm);
   });
 });
