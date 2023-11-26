@@ -1,21 +1,26 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
 import { AppProps } from 'next/app';
+import { Provider } from 'react-redux';
+import { wrapper } from '@/src/Store/Store';
 import RootLayout from './layout';
 import ErrorBoundary from '@/src/components/ErrorBoundary/ErrorBoundary';
 import ErrorButton from '@/src/components/Error/ErrorButton';
 import '../src/styles/index.css';
-import { Provider } from 'react-redux';
-import store from '@/src/Store/Store';
 
-const App = ({ Component, pageProps }: AppProps): JSX.Element => (
-  <Provider store={store}>
+const ProviderStore: React.FC<PropsWithChildren> = ({ children }) => {
+  const { store } = wrapper.useWrappedStore({});
+  return <Provider store={store}>{children}</Provider>;
+};
+
+const App: React.FC<AppProps> = ({ Component, pageProps }) => (
+  <ProviderStore>
     <RootLayout>
       <ErrorBoundary>
         <ErrorButton />
         <Component {...pageProps} />
       </ErrorBoundary>
     </RootLayout>
-  </Provider>
+  </ProviderStore>
 );
 
 export default App;
