@@ -8,14 +8,14 @@ import { Provider } from 'react-redux';
 import store from '@/src/Store/Store';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
-  <RootLayout>
-    <ErrorBoundary>
-      <Provider store={store}>
+  <Provider store={store}>
+    <RootLayout>
+      <ErrorBoundary>
         <ErrorButton />
         <Component {...pageProps} />
-      </Provider>
-    </ErrorBoundary>
-  </RootLayout>
+      </ErrorBoundary>
+    </RootLayout>
+  </Provider>
 );
 
 export default App;

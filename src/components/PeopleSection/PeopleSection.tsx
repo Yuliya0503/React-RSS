@@ -1,58 +1,78 @@
-import { useEffect } from 'react';
-import { IPeople } from '../../models/ISWAPI';
+import { PropsWithChildren, useEffect, useState } from 'react';
+import { IPeople, IResponse } from '../../models/ISWAPI';
 import Card from '../Card/Card';
 import NoResultSection from '../NoResultSection/NoResultSection';
-import Loading from '../Loading/Loading';
+//import Loading from '../Loading/Loading';
 import styles from './PeopleSection.module.css';
-import { useGetPeopleQuery } from '../../API/CardService';
 import Pagination from '../Pagination/Pagination';
-import NotFound from '../NotFound/NotFound';
-import { useRouter } from 'next/router';
+//import NotFound from '../NotFound/NotFound';
+import { Router, useRouter } from 'next/router';
+import { encode } from 'querystring';
+import { DEFAULT_LIMIT } from '@/src/models/constants';
+import Loading from '../Loading/Loading';
 
-const buildSearchParams = (
-  searchTerm: string,
-  limit: number,
-  currentPage: number
-): string => {
-  const searchParams = new URLSearchParams();
-  searchTerm && searchParams.append('search', searchTerm);
-  limit && searchParams.append('limit', limit.toString());
-  currentPage && searchParams.append('page', currentPage.toString());
-  return searchParams.toString();
-};
+interface Props {
+  people: IResponse;
+}
 
-const PeopleSection = (): JSX.Element => {
+// const buildSearchParams = (
+//   searchTerm: string,
+//   limit: number,
+//   currentPage: number
+// ): string => {
+//   const searchParams = new URLSearchParams();
+//   searchTerm && searchParams.append('search', searchTerm);
+//   limit && searchParams.append('limit', limit.toString());
+//   currentPage && searchParams.append('page', currentPage.toString());
+//   return searchParams.toString();
+// };
+
+const PeopleSection = ({
+  children,
+  people,
+}: PropsWithChildren<Props>): JSX.Element => {
   const router = useRouter();
-  const searchTerm = (router.query.search as string) || '';
-  const limit = Number(router.query.limit) || 10;
-  const currentPage = Number(router.query.page) || 1;
+  //const [loading, setLoading] = useState(false);
+  //const searchTerm = (router.query.search as string) || '';
+  //const limit = Number(router.query.limit) || 10;
+  //const currentPage = Number(router.query.page) || 1;
 
-  const searchParams = buildSearchParams(searchTerm, limit, currentPage);
+  const searchParams = new URLSearchParams(encode(router.query));
+  const [loading, setLoading] = useState(false);
 
-  const { isFetching, data, isError } = useGetPeopleQuery(searchParams);
+  useEffect(() => {
+    const handlerOn = () => setLoading(true);
+    const handlerOff = () => setLoading(false);
 
-  useEffect(() => {}, [router.query]);
+    Router.events.on('routeChangeStart', handlerOn);
+    Router.events.on('routeChangeComplete', handlerOff);
+    Router.events.on('routeChangeError', handlerOff);
 
-  if (isFetching) return <Loading />;
-  if (isError) return <NotFound />;
-
-  const { results: persons = [], count } = data || {};
-  const truncatedPersons: IPeople[] = persons.slice(0, limit);
+    return () => {
+      Router.events.off('routeChangeStart', handlerOn);
+      Router.events.off('routeChangeComplete', handlerOff);
+      Router.events.off('routeChangeError', handlerOff);
+    };
+  }, []);
+  if (loading) return <Loading />;
+  const persons = [...people.results];
+  persons.length = Number(searchParams.get('limit')) || DEFAULT_LIMIT;
 
   return (
     <section className={styles.section_wrapper}>
-      {truncatedPersons.length === 0 ? (
+      {persons.length === 0 ? (
         <NoResultSection />
       ) : (
         <>
           <div className={styles.people_wrapper}>
             <ul className={styles.card_wrapper}>
-              {truncatedPersons.map((person: IPeople) => (
+              {persons.map((person: IPeople) => (
                 <Card key={person.url} person={person} />
               ))}
             </ul>
+            {children}
           </div>
-          <Pagination totalItems={count as number} />
+          <Pagination totalItems={people.count as number} />
         </>
       )}
     </section>
