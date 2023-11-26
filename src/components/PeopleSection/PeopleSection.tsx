@@ -1,12 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { IPeople, IResponse } from '../../models/ISWAPI';
 import Card from '../Card/Card';
 import NoResultSection from '../NoResultSection/NoResultSection';
 import styles from './PeopleSection.module.css';
 import Pagination from '../Pagination/Pagination';
-import { Router, useRouter } from 'next/router';
-import { encode } from 'querystring';
-import { DEFAULT_LIMIT } from '@/src/models/constants';
+import { useRouter } from 'next/router';
 import Loading from '../Loading/Loading';
 
 interface Props {
@@ -21,41 +19,34 @@ const PeopleSection = ({ children, people }: PropsWithChildren<Props>) => {
     const handlerOn = () => setLoading(true);
     const handlerOff = () => setLoading(false);
 
-    Router.events.on('routeChangeStart', handlerOn);
-    Router.events.on('routeChangeComplete', handlerOff);
-    Router.events.on('routeChangeError', handlerOff);
+    router.events.on('routeChangeStart', handlerOn);
+    router.events.on('routeChangeComplete', handlerOff);
+    router.events.on('routeChangeError', handlerOff);
 
     return () => {
-      Router.events.off('routeChangeStart', handlerOn);
-      Router.events.off('routeChangeComplete', handlerOff);
-      Router.events.off('routeChangeError', handlerOff);
+      router.events.off('routeChangeStart', handlerOn);
+      router.events.off('routeChangeComplete', handlerOff);
+      router.events.off('routeChangeError', handlerOff);
     };
-  }, []);
+  }, [router]);
+
+  const { results, count } = people || {};
+  const persons = results || [];
 
   if (loading) return <Loading />;
-  const searchParams = new URLSearchParams(encode(router.query));
-  const persons = (people?.results || []).slice(
-    0,
-    Number(searchParams.get('limit')) || DEFAULT_LIMIT
-  );
+  if (!persons.length) return <NoResultSection />;
 
   return (
     <section className={styles.section_wrapper}>
-      {persons.length === 0 ? (
-        <NoResultSection />
-      ) : (
-        <>
-          <div className={styles.people_wrapper}>
-            <ul className={styles.card_wrapper}>
-              {persons.map((person: IPeople) => (
-                <Card key={person.url} person={person} />
-              ))}
-            </ul>
-            {children}
-          </div>
-          <Pagination key={router.asPath} totalItems={people?.count} />
-        </>
-      )}
+      <div className={styles.people_wrapper}>
+        <ul className={styles.card_wrapper}>
+          {persons.map((person: IPeople) => (
+            <Card key={person.url} person={person} />
+          ))}
+        </ul>
+        {children}
+      </div>
+      <Pagination key={router.asPath} totalItems={count || 0} />
     </section>
   );
 };
