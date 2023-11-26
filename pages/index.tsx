@@ -30,7 +30,6 @@ const HomePage = ({ people }: Props): JSX.Element => (
   <>
     <Header />
     <PeopleSection people={people} />
-    {console.log(people)}
   </>
 );
 

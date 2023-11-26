@@ -1,15 +1,14 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { apiPeople } from '../API/CardService';
 import { createWrapper } from 'next-redux-wrapper';
-
-const middleware = [...getDefaultMiddleware(), apiPeople.middleware];
 
 export const makeStore = () =>
   configureStore({
     reducer: {
       [apiPeople.reducerPath]: apiPeople.reducer,
     },
-    middleware,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(apiPeople.middleware),
   });
 
 export type AppStore = ReturnType<typeof makeStore>;
