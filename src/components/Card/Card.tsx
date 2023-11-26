@@ -2,16 +2,19 @@ import React from 'react';
 import { ICardPeopleProps } from '../../models/types';
 import styles from './card.module.css';
 import CharacterInfo from './CharacterInfo/CharacterInfo';
-import LinkWithQueryParams from '../../Router/LinkWithQueryParams';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Card: React.FC<ICardPeopleProps> = ({ person }) => {
+  const router = useRouter();
   const id = person.url?.split('/').filter(Boolean).at(-1);
+  const href = `${id}${router.asPath}`;
 
   return (
     <li key={id} className={styles.people_card}>
-      <LinkWithQueryParams to={id || ''}>
+      <Link href={href} className={styles.links}>
         <CharacterInfo person={person} />
-      </LinkWithQueryParams>
+      </Link>
     </li>
   );
 };

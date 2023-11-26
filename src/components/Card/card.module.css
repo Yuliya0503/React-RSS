@@ -7,3 +7,8 @@
   overflow-y: auto;
   margin: 10px;
 }
+
+.links {
+  text-decoration: none;
+  color: inherit;
+}
