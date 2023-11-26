@@ -1,17 +1,19 @@
-import { Middleware, configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { apiPeople } from '../API/CardService';
 import { createWrapper } from 'next-redux-wrapper';
 
-const store = configureStore({
-  reducer: { [apiPeople.reducerPath]: apiPeople.reducer },
-  middleware: (getDefaultMiddleware) => {
-    const additionalMiddleware: Middleware[] = [apiPeople.middleware];
-    return getDefaultMiddleware().concat(additionalMiddleware);
-  },
-});
+const middleware = [...getDefaultMiddleware(), apiPeople.middleware];
 
-export type AppStore = typeof store;
+export const makeStore = () =>
+  configureStore({
+    reducer: {
+      [apiPeople.reducerPath]: apiPeople.reducer,
+    },
+    middleware,
+  });
+
+export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];
-export const wrapper = createWrapper<AppStore>(() => store);
-export default store;
+
+export const wrapper = createWrapper<AppStore>(makeStore);
