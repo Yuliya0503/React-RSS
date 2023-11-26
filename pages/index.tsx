@@ -8,18 +8,27 @@ import { IResponse } from '@/src/models/ISWAPI';
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
-    const searchParams = new URLSearchParams(encode(context.query));
-    store.dispatch(getPeople.initiate(searchParams.toString()));
+    try {
+      const searchParams = new URLSearchParams(encode(context.query));
+      store.dispatch(getPeople.initiate(searchParams.toString()));
 
-    const [people] = await Promise.all(
-      store.dispatch(getRunningQueriesThunk())
-    );
+      const [people] = await Promise.all(
+        store.dispatch(getRunningQueriesThunk())
+      );
 
-    return {
-      props: {
-        people: people?.data || null,
-      },
-    };
+      return {
+        props: {
+          people: people?.data || null,
+        },
+      };
+    } catch (error) {
+      console.error(`Error fetching data: ${error}`);
+      return {
+        props: {
+          people: null,
+        },
+      };
+    }
   }
 );
 interface Props {
