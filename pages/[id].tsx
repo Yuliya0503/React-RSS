@@ -43,7 +43,7 @@ interface Props {
   person: IPeople;
   people: IResponse;
 }
-const DetailsPage = ({ person, people }: Props): JSX.Element => (
+const DetailsPage = ({ people, person }: Props): JSX.Element => (
   <>
     <Header />
     <PeopleSection people={people}>
