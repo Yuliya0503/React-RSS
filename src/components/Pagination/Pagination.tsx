@@ -2,7 +2,7 @@ import styles from './Pagination.module.css';
 import { ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../models/constants';
-import { getSearchParams } from '@/src/helpers/getParams';
+import { getSearchParams } from '../../helpers/getParams';
 
 interface PaginationProps {
   totalItems: number;

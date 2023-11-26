@@ -6,7 +6,7 @@ import styles from './PeopleSection.module.css';
 import Pagination from '../Pagination/Pagination';
 import { Router, useRouter } from 'next/router';
 import Loading from '../Loading/Loading';
-import { getSearchParams } from '@/src/helpers/getParams';
+import { getSearchParams } from '../../helpers/getParams';
 
 interface Props {
   people: IResponse;
