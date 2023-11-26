@@ -2,7 +2,7 @@ import styles from './Pagination.module.css';
 import { ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../models/constants';
-import { encode } from 'querystring';
+import { getSearchParams } from '@/src/helpers/getParams';
 
 interface PaginationProps {
   totalItems: number;
@@ -10,20 +10,15 @@ interface PaginationProps {
 
 const Pagination = ({ totalItems }: PaginationProps) => {
   const router = useRouter();
-  const searchParams = new URLSearchParams(encode(router.query));
-  const limit: number = Number(searchParams.get('limit')) || DEFAULT_LIMIT;
-  const currentPage: number = Number(searchParams.get('page')) || DEFAULT_PAGE;
-  const search: string = searchParams.get('search') || '';
-  const commonQuery = { pathname: '/', query: { search, currentPage, limit } };
-
+  const { search, limit, page } = getSearchParams(router.query);
   const totalPages: number = Math.max(1, Math.ceil(totalItems / DEFAULT_LIMIT));
-  const isPrevButtonDisabled: boolean = currentPage <= DEFAULT_PAGE;
-  const isNextButtonDisabled: boolean = currentPage >= totalPages;
+  const isPrevButtonDisabled: boolean = page <= DEFAULT_PAGE;
+  const isNextButtonDisabled: boolean = page >= totalPages;
 
   const handlePageChange = (newPage: number): void => {
     router.push({
-      ...commonQuery,
-      query: { ...commonQuery.query, currentPage: newPage },
+      pathname: '/',
+      query: { search, page: newPage, limit },
     });
   };
 
@@ -32,13 +27,13 @@ const Pagination = ({ totalItems }: PaginationProps) => {
   ): void => {
     const { value } = e.target;
     router.push({
-      ...commonQuery,
-      query: { ...commonQuery.query, limit: value },
+      pathname: '/',
+      query: { search, limit: value, page },
     });
   };
 
-  const prevPage: number = currentPage - 1;
-  const nextPage: number = currentPage + 1;
+  const prevPage: number = page - 1;
+  const nextPage: number = page + 1;
 
   return (
     <div className={styles.container}>
@@ -49,7 +44,7 @@ const Pagination = ({ totalItems }: PaginationProps) => {
       >
         ← Prev
       </button>
-      <label className={styles.currentPage}>{currentPage}</label>
+      <label className={styles.currentPage}>{page}</label>
       <button
         className={`${styles.button} ${styles.nextButton}`}
         disabled={isNextButtonDisabled}
