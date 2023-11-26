@@ -4,20 +4,18 @@ import { IPeople, IResponse } from '../models/ISWAPI';
 import { HYDRATE } from 'next-redux-wrapper';
 
 const baseUrl = ConstantsURL.PEOPLE_URL;
-const GET_PEOPLE_ENDPOINT = 'getPeople';
-const GET_PERSON_ENDPOINT = 'getPerson';
 
 export const apiPeople = createApi({
   reducerPath: 'apiPeople',
+  tagTypes: ['People'],
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
-    [GET_PEOPLE_ENDPOINT]: builder.query<IResponse, string>({
-      query: (searchParams: string) => ({
-        url: searchParams ? `?${searchParams}` : '',
-      }),
+    getPeople: builder.query<IResponse, string>({
+      query: (searchParams) => `?${searchParams}`,
+      providesTags: ['People'],
     }),
-    [GET_PERSON_ENDPOINT]: builder.query<IPeople, string>({
-      query: (id: string) => id,
+    getPerson: builder.query<IPeople, string>({
+      query: (id) => `/${id}`,
     }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
@@ -26,11 +24,7 @@ export const apiPeople = createApi({
 });
 
 export const {
-  useGetPeopleQuery,
-  useGetPersonQuery,
   util: { getRunningQueriesThunk },
 } = apiPeople;
-
-export const { select: selectPerson } = apiPeople.endpoints.getPerson;
 
 export const { getPeople, getPerson } = apiPeople.endpoints;
